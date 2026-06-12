@@ -15,7 +15,12 @@ app.use("/uploads", express.static("uploads"));
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true }));
+app.use(cors({ 
+  origin: function(origin, callback) {
+    callback(null, true);
+  }, 
+  credentials: true 
+}));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const serveProtected = (req, res, next) => {

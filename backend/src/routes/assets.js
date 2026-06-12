@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import prisma from "../prismaClient.js";
+import { prisma } from "../lib/prisma.js";
 
 // GET /api/assets -> List all assets (with employee info if assigned)
 router.get("/", async (req, res) => {

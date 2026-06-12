@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import api from "@/lib/api";
 import {
   Search, FileText, CheckCircle2, AlertCircle, XCircle, LogOut,
-  ChevronLeft, ChevronRight, UserPlus, Users, MessageSquare, TrendingUp, CalendarCheck
+  ChevronLeft, ChevronRight, UserPlus, Users, MessageSquare, TrendingUp, CalendarCheck, Activity
 } from "lucide-react";
 import Link from "next/link";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
@@ -234,29 +234,31 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ROW 1: HR Activities */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -z-10 opacity-60 translate-x-1/2 -translate-y-1/2" />
-          <h3 className="font-black text-slate-800 text-[15px] mb-4 flex items-center justify-between">
-            <span>HR Activities</span>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100 flex items-center gap-1"><TrendingUp size={12}/> +12% this week</span>
-          </h3>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 bg-gradient-to-b from-blue-50/50 to-white border border-blue-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
-              <span className="text-4xl font-black text-blue-600 tracking-tight group-hover:scale-105 transition-transform">{data?.kpis?.totalCandidates || 0}</span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Active Offers</span>
+        {/* ROW 1: HR Activities (Ultra-Sleek Bar) */}
+        <div className="flex items-center bg-white border border-slate-200 rounded-xl sm:rounded-full shadow-sm mb-6 px-1 py-1 overflow-x-auto hide-scrollbar w-full">
+          <div className="flex items-center min-w-max gap-1 sm:gap-2">
+            <div className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest px-2 sm:px-3 flex items-center gap-1.5 border-r border-slate-100">
+              <Activity size={12} className="text-blue-500" />
+              HR Activities
             </div>
-            <div className="flex-1 bg-gradient-to-b from-emerald-50/50 to-white border border-emerald-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
-              <span className="text-4xl font-black text-emerald-600 tracking-tight group-hover:scale-105 transition-transform">{data?.kpis?.payslipsThisMonth || 0}</span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Payslips Issued</span>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3">
+              <span className="text-[12px] font-black text-blue-600">{data?.kpis?.totalCandidates || 0}</span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-600">Active Offers</span>
             </div>
-            <div className="flex-1 bg-gradient-to-b from-amber-50/50 to-white border border-amber-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
-              <span className="text-4xl font-black text-amber-500 tracking-tight group-hover:scale-105 transition-transform">{candidates.filter(c => c.stage === 'OFFER_ACCEPTED').length || 0}</span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Ready to Onboard</span>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="text-[12px] font-black text-emerald-600">{data?.kpis?.payslipsThisMonth || 0}</span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-600">Payslips Issued</span>
             </div>
-            <div className="flex-1 bg-gradient-to-b from-purple-50/50 to-white border border-purple-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
-              <span className="text-4xl font-black text-purple-600 tracking-tight group-hover:scale-105 transition-transform">0</span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Pending Confirms</span>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="text-[12px] font-black text-amber-500">{candidates.filter(c => c.stage === 'OFFER_ACCEPTED').length || 0}</span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-600">Ready to Onboard</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="text-[12px] font-black text-purple-600">0</span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-600">Pending Confirms</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1"><TrendingUp size={10}/> +12%</span>
             </div>
           </div>
         </div>

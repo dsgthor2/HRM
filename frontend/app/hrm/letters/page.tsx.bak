@@ -1,0 +1,1060 @@
+"use client";
+import AppShell from "@/components/layout/AppShell";
+import { useEffect, useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import api from "@/lib/api";
+import clsx from "clsx";
+import {
+  FileText, Check, ChevronRight, ChevronLeft, Download, User,
+  MapPin, Briefcase, Mail, Phone, Calendar, IndianRupee, Info,
+  Search, Users, UserCheck, RefreshCw, X, Shield, Fingerprint, Heart, Plus, UserPlus, Eye
+} from "lucide-react";
+
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+interface Step {
+  id: number;
+  title: string;
+  subtitle: string;
+}
+
+const STEPS: Step[] = [
+  { id: 1, title: "Target", subtitle: "Select Person" },
+  { id: 2, title: "Design", subtitle: "Letter & Template" },
+  { id: 3, title: "Identity", subtitle: "Personal Details" },
+  { id: 4, title: "KYC", subtitle: "PAN & Aadhaar" },
+  { id: 5, title: "Contact", subtitle: "Mailing Info" },
+  { id: 6, title: "Address", subtitle: "Residence" },
+  { id: 7, title: "Career", subtitle: "Role & Dept" },
+  { id: 8, title: "Salary", subtitle: "Comp Details" },
+  { id: 9, title: "Finalize", subtitle: "Dates & Signatory" },
+  { id: 10, title: "Review", subtitle: "Verify all data" }
+];
+
+const CATEGORIES = [
+  { id: "CANDIDATE", label: "Candidate", icon: Users, sub: "Hiring phase documents" },
+  { id: "EMPLOYEE", label: "Employee", icon: UserCheck, sub: "Operational lifecycle docs" }
+];
+
+const LETTER_TYPES = [
+  { id: "OFFER", label: "Offer Letter", cat: "CANDIDATE" },
+  { id: "CONTRACT", label: "Contract Letter", cat: "CANDIDATE" },
+  { id: "PROBATION", label: "Probation Letter", cat: "EMPLOYEE" },
+  { id: "INCREMENT", label: "Increment Letter", cat: "EMPLOYEE" },
+  { id: "EXIT", label: "Exit Letter", cat: "EMPLOYEE" }
+];
+
+// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+// ─── Quick-Add Employee Modal ─────────────────────────────────────────────────
+const QUICK_EMP_EMPTY = {
+  name: "", email: "", phone: "",
+  department: "", designation: "", status: "PROBATION",
+  joinDate: new Date().toISOString().split("T")[0],
+  salary: "", workLocation: "",
+};
+
+function QuickAddEmployeeModal({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
+  const [form, setForm] = useState<any>({ ...QUICK_EMP_EMPTY });
+  const [saving, setSaving] = useState(false);
+  const set = (k: string, v: string) => setForm((f: any) => ({ ...f, [k]: v }));
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await api.post("/employees", form);
+      onSaved();
+      onClose();
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Error saving employee");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg slide-in">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center"><UserPlus size={16} className="text-emerald-600" /></div>
+            <h3 className="font-black text-navy">Create New Employee</h3>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-slate-100 transition-colors"><X size={18} /></button>
+        </div>
+        <p className="px-6 pt-3 text-xs text-slate-400">Enter key details — you can fill remaining information by editing the employee later.</p>
+        <form onSubmit={handleSave}>
+          <div className="p-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label className="label">Full Name *</label>
+                <input className="input" required value={form.name} onChange={e => set("name", e.target.value)} placeholder="John Doe" />
+              </div>
+              <div>
+                <label className="label">Email *</label>
+                <input className="input" required type="email" value={form.email} onChange={e => set("email", e.target.value)} placeholder="john@company.com" />
+              </div>
+              <div>
+                <label className="label">Phone</label>
+                <input className="input" value={form.phone} onChange={e => set("phone", e.target.value)} placeholder="9XXXXXXXXX" />
+              </div>
+              <div>
+                <label className="label">Department</label>
+                <input className="input" value={form.department} onChange={e => set("department", e.target.value)} placeholder="Engineering" />
+              </div>
+              <div>
+                <label className="label">Designation</label>
+                <input className="input" value={form.designation} onChange={e => set("designation", e.target.value)} placeholder="Software Engineer" />
+              </div>
+              <div>
+                <label className="label">Joining Date *</label>
+                <input className="input" required type="date" value={form.joinDate} onChange={e => set("joinDate", e.target.value)} />
+              </div>
+              <div>
+                <label className="label">Status</label>
+                <select className="select" value={form.status} onChange={e => set("status", e.target.value)}>
+                  {["ACTIVE","PROBATION","CONTRACT","INTERN","INACTIVE"].map(s => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="label">Salary (₹/mo)</label>
+                <input className="input" type="number" value={form.salary} onChange={e => set("salary", e.target.value)} placeholder="50000" />
+              </div>
+              <div>
+                <label className="label">Work Location</label>
+                <input className="input" value={form.workLocation} onChange={e => set("workLocation", e.target.value)} placeholder="Hyderabad" />
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 px-6 pb-6">
+            <button type="submit" disabled={saving} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all disabled:opacity-50">
+              {saving ? "Adding..." : "Add Employee →"}
+            </button>
+            <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-all">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function LettersWizardPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [step, setStep] = useState(1);
+  const [category, setCategory] = useState("CANDIDATE");
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
+
+  // Data lists
+  const [candidates, setCandidates] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [depts, setDepts] = useState<any[]>([]);
+  const [locs, setLocs] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
+
+  // Selections
+  const [selectedTarget, setSelectedTarget] = useState<any>(null);
+  const [letterType, setLetterType] = useState<string>("OFFER");
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [genResult, setGenResult] = useState<any>(null);
+
+  // Form State (Comprehensive)
+  const [form, setForm] = useState({
+    prefix: "Mr.",
+    firstName: "",
+    lastName: "",
+    fatherName: "",
+    gender: "Male",
+    dob: "",
+    pan: "",
+    aadhaar: "",
+    email: "",
+    mobile: "",
+    addressLine: "",
+    district: "",
+    state: "",
+    pinCode: "",
+    department: "",
+    workLocation: "",
+    designation: "",
+    manager: "",
+    // Salary
+    ctc: "",
+    basicPct: 40,
+    hraPct: 50,
+    gratuityPct: 4.81,
+    oldCtc: "",
+    incrementType: "Annual",
+    // Stats for specific letters
+    probationPeriod: "6 Months",
+    probationDecision: "CONFIRMED",
+    reviewerName: "",
+    confirmationDate: "",
+    probationEndDate: "",
+    joiningDate: "",
+    noticePeriod: "30 Days",
+    exitType: "Resignation",
+    lastWorkingDay: "",
+    assetStatus: "Returned",
+    // Internship specifics
+    employmentType: "Internship",
+    workMode: "Office",
+    effectiveFrom: "",
+    effectiveTo: "",
+    offerDate: "",
+    offerValidTill: "",
+    // Execution
+    date: "",
+    duration: "3 Months",
+    sigName: "M. Harish",
+    sigDesignation: "HR Manager",
+    // Statutory Overrides
+    includeEPF: "Yes",
+    includeESI: "Yes",
+    includePT: "No",
+    manualEPF: "",
+    manualESI: "",
+    letterWorkLocation: "",
+  });
+
+  const loadBaseData = async () => {
+    try {
+      const [cRes, eRes, dRes, lRes, tRes] = await Promise.all([
+        api.get("/candidates"),
+        api.get("/employees"),
+        api.get("/company/departments"),
+        api.get("/company/locations"),
+        api.get("/letters/templates")
+      ]);
+      setCandidates(cRes.data || []);
+      setEmployees(eRes.data || []);
+      setDepts(dRes.data || []);
+      setLocs(lRes.data || []);
+      setTemplates(tRes.data || []);
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => { loadBaseData(); }, []);
+
+  useEffect(() => {
+    const targetId = searchParams.get("targetId");
+    const targetType = searchParams.get("targetType");
+    const type = searchParams.get("type");
+
+    if (targetId && targetType && (candidates.length > 0 || employees.length > 0)) {
+      setCategory(targetType);
+      if (type) setLetterType(type);
+
+      const list = targetType === "CANDIDATE" ? candidates : employees;
+      const target = list.find((i: any) => i.id === targetId);
+      if (target) {
+        handleSelectTarget(target);
+      }
+    }
+  }, [searchParams, candidates, employees]);
+
+  const updateForm = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
+
+  const next = () => setStep(s => Math.min(s + 1, 11));
+  const back = () => setStep(s => Math.max(s - 1, 1));
+
+  const handleSelectTarget = (item: any) => {
+    setSelectedTarget(item);
+    const names = (item.name || "").split(" ");
+    setForm(f => ({
+      ...f,
+      firstName: names[0] || "",
+      lastName: names.slice(1).join(" ") || "",
+      email: item.email || "",
+      mobile: item.phone || item.mobile || "",
+      designation: item.designation || item.position || "",
+      department: item.department || "",
+      workLocation: item.workLocation || "",
+      ctc: item.salary || item.offeredCTC || "",
+      pan: item.pan || "",
+      aadhaar: item.aadhaar || "",
+      dob: item.dob ? new Date(item.dob).toISOString().split('T')[0] : "",
+      gender: item.gender || "Male",
+      employeeId: item.employeeId || "",
+      candidateId: item.candidateId || "",
+      addressLine: item.addressLine1 || item.address || "",
+      district: item.city || "",
+      state: item.state || "",
+      pinCode: item.pincode || "",
+      department: item.department || "",
+      workLocation: item.workLocation || item.location || "",
+      pan: item.pan || "",
+      aadhaar: item.aadhaar || "",
+      dob: item.dob ? new Date(item.dob).toISOString().split('T')[0] : "",
+      gender: item.gender || "Male",
+      joiningDate: item.joinDate ? new Date(item.joinDate).toISOString().split('T')[0] : "",
+    }));
+    setStep(2);
+  };
+
+  const getSalaryData = (f: any) => {
+    if (letterType === 'INTERNSHIP') {
+      const stipend = Number(f.ctc || 0);
+      return {
+        annualCTC: stipend * 12,
+        grossMonthly: stipend,
+        netMonthly: stipend,
+        earnings: [
+          { name: "Monthly Stipend", value: stipend }
+        ],
+        deductions: []
+      };
+    }
+
+    const annualCTC = Number(f.ctc || 0);
+    const monthlyCTC = Math.round(annualCTC / 12);
+    
+    // Use defaults from form if empty
+    const basicPct = Number(f.basicPct || 40) / 100;
+    const hraPct = Number(f.hraPct || 40) / 100;
+    const gratuityPct = Number(f.gratuityPct || 4.81) / 100;
+
+    const basic = Math.round(monthlyCTC * basicPct);
+    const hra = Math.round(monthlyCTC * hraPct);
+    
+    let epfEmployer = 0;
+    let epfEmployee = 0;
+    if (f.includeEPF === 'Yes') {
+      const epfBase = Math.min(basic, 15000);
+      epfEmployer = f.manualEPF ? Number(f.manualEPF) : Math.round(epfBase * 0.12);
+      epfEmployee = epfEmployer;
+    }
+
+    let esiEmployer = 0;
+    let esiEmployee = 0;
+    if (f.includeESI === 'Yes' && monthlyCTC <= 21000) {
+      esiEmployer = f.manualESI ? Number(f.manualESI) : Math.round(monthlyCTC * 0.0325);
+      esiEmployee = f.manualESI ? Math.round(Number(f.manualESI) * (0.0075 / 0.0325)) : Math.round(monthlyCTC * 0.0075);
+    }
+
+    const gratuity = Math.round((basic * 12 * gratuityPct) / 12);
+
+    const fixedEarnings = basic + hra + epfEmployer + esiEmployer + gratuity;
+    const specialAllowance = Math.max(0, monthlyCTC - fixedEarnings);
+    
+    const grossMonthly = basic + hra + specialAllowance;
+    
+    let pt = 0;
+    if (f.includePT === 'Yes') {
+        if (grossMonthly > 20000) pt = 200;
+        else if (grossMonthly > 15000) pt = 150;
+    }
+
+    const totalDeductions = epfEmployee + esiEmployee + pt;
+    const netMonthly = grossMonthly - totalDeductions;
+
+    return {
+      annualCTC,
+      grossMonthly,
+      netMonthly,
+      totalDeductions,
+      totalEmployer: epfEmployer + esiEmployer + gratuity,
+      epf: epfEmployer,
+      esi: esiEmployer,
+      gratuity,
+      earnings: [
+        { name: "Basic Salary", value: basic },
+        { name: "House Rent Allowance (HRA)", value: hra },
+        { name: "Special Allowance", value: specialAllowance }
+      ],
+      deductions: [
+        { name: "Employee EPF", value: epfEmployee },
+        { name: "Employee ESI", value: esiEmployee },
+        { name: "Professional Tax", value: pt }
+      ].filter(d => d.value > 0)
+    };
+  };
+
+  const preview = async () => {
+    setLoading(true);
+    try {
+      const isInternship = letterType === 'INTERNSHIP';
+      const payload = {
+        type: letterType,
+        templateId: selectedTemplate?.id,
+        data: {
+          ...form,
+          name: `${form.firstName} ${form.lastName}`,
+          contact: form.mobile,
+          address: `${form.addressLine}, ${form.district}, ${form.state} - ${form.pinCode}`,
+          workLocation: form.letterWorkLocation || form.workLocation,
+          joinDate: isInternship ? form.effectiveFrom : form.date,
+          effectiveDate: isInternship ? form.effectiveFrom : form.date,
+          resignationDate: form.date,
+          signatoryName: form.sigName,
+          signatoryDesignation: form.sigDesignation
+        },
+        salaryData: getSalaryData(form)
+      };
+      const res = await api.post("/letters/preview", payload);
+      window.open(`http://localhost:5000${res.data.pdfUrl}`, '_blank');
+    } catch (err: any) {
+      alert(err.response?.data?.error || "Preview failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const finalize = async () => {
+    setLoading(true);
+    try {
+      const isInternship = letterType === 'INTERNSHIP';
+      const payload = {
+        candidateId: category === "CANDIDATE" ? selectedTarget?.id : null,
+        employeeId: category === "EMPLOYEE" ? selectedTarget?.id : null,
+        type: letterType,
+        templateId: selectedTemplate?.id,
+        data: {
+          ...form,
+          name: `${form.firstName} ${form.lastName}`,
+          contact: form.mobile,
+          address: `${form.addressLine}, ${form.district}, ${form.state} - ${form.pinCode}`,
+          workLocation: form.letterWorkLocation || form.workLocation,
+          joinDate: isInternship ? form.effectiveFrom : form.date,
+          effectiveDate: isInternship ? form.effectiveFrom : form.date,
+          resignationDate: form.date,
+          signatoryName: form.sigName,
+          signatoryDesignation: form.sigDesignation
+        },
+        salaryData: getSalaryData(form)
+      };
+      const res = await api.post("/letters/generate-advanced", payload);
+      setGenResult(res.data);
+      setStep(11); // Success Screen
+    } catch (err: any) {
+      alert(err.response?.data?.error || "Generation failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredItems = (category === "CANDIDATE" ? candidates : employees).filter(i =>
+    i.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const currentTypeTemplates = templates.filter(t => t.type === letterType);
+
+  return (
+    <AppShell title="Smart Letter Generator">
+      <div className="max-w-5xl mx-auto py-8 px-4">
+
+        {/* Dynamic Stepper */}
+        {step <= 10 && (
+          <div className="flex items-center justify-between mb-12 px-4">
+            {STEPS.map((s, i) => (
+              <div key={s.id} className="flex flex-col items-center flex-1 relative">
+                <div className={clsx(
+                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-black transition-all z-10",
+                  step > s.id ? "bg-emerald-500 text-white" :
+                    step === s.id ? "bg-accent text-white shadow-xl shadow-accent/20 scale-110" :
+                      "bg-white border-2 border-cream-dark text-slate-300"
+                )}>
+                  {step > s.id ? <Check size={18} /> : s.id}
+                </div>
+                {i < STEPS.length - 1 && (
+                  <div className={clsx(
+                    "absolute left-1/2 top-5 w-full h-[2px] transition-all",
+                    step > s.id ? "bg-emerald-500" : "bg-cream-dark"
+                  )} />
+                )}
+                <span className={clsx(
+                  "text-[10px] font-black uppercase tracking-widest mt-4 transition-colors hidden md:block",
+                  step === s.id ? "text-navy" : "text-slate-300"
+                )}>{s.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-center items-start min-h-[600px]">
+          <div className="bg-white rounded-[40px] shadow-2xl shadow-navy/5 border border-cream-dark w-full max-w-2xl p-12 relative slide-in overflow-hidden">
+            
+            <div className="absolute top-0 left-0 w-full h-2 bg-cream/30">
+              <div className="h-full bg-accent transition-all duration-700 ease-out" style={{ width: `${(step / 10) * 100}%` }} />
+            </div>
+
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              
+              {/* STEP 1: TARGET */}
+              {step === 1 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Who is the letter for?</h2>
+                    <p className="text-slate-400">Select the target person to begin generation</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    {CATEGORIES.map(c => (
+                      <button key={c.id} onClick={() => setCategory(c.id)} className={clsx(
+                        "p-8 rounded-[32px] border-2 transition-all text-left group",
+                        category === c.id ? "border-accent bg-accent/5 ring-8 ring-accent/5" : "border-cream-dark hover:border-accent/30"
+                      )}>
+                        <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center mb-6", category === c.id ? "bg-accent text-white" : "bg-cream text-slate-400")}>
+                          <c.icon size={24} />
+                        </div>
+                        <div className="font-black text-navy text-lg">{c.label}</div>
+                        <div className="text-[11px] text-slate-400 mt-2 uppercase tracking-widest font-bold">{c.sub}</div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="relative group">
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-accent transition-colors" size={20} />
+                    <input className="input pl-14 h-16 bg-cream/20 border-cream-dark text-lg" placeholder={`Search ${category === 'CANDIDATE' ? 'candidates' : 'employees'} by name...`} value={search} onChange={e => setSearch(e.target.value)} />
+                  </div>
+
+                  <div className="max-h-48 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                    {filteredItems.length === 0 ? (
+                      <div className="p-6 text-center bg-amber-50 rounded-2xl border border-amber-200">
+                        <p className="text-amber-700 font-bold text-sm mb-3">No {category === 'CANDIDATE' ? 'candidates' : 'employees'} found</p>
+                        {category === 'CANDIDATE' ? (
+                          <button
+                            onClick={() => router.push('/recruitment/candidates')}
+                            className="text-xs font-black text-accent hover:underline flex items-center gap-1 mx-auto"
+                          >
+                            <Plus size={12} /> Add candidates →
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => router.push('/hrm/employees')}
+                            className="text-xs font-black text-accent hover:underline flex items-center gap-1 mx-auto"
+                          >
+                            <Plus size={12} /> Add employees →
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      filteredItems.map(item => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleSelectTarget(item)}
+                          className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-cream/40 border border-transparent hover:border-cream-dark transition-all group"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-navy text-white flex items-center justify-center text-sm font-black">{item.name[0]}</div>
+                            <div className="text-left">
+                              <div className="font-bold text-navy group-hover:text-accent transition-colors">{item.name}</div>
+                              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{item.email}</div>
+                            </div>
+                          </div>
+                          <ChevronRight size={20} className="text-slate-300 group-hover:translate-x-2 transition-transform" />
+                        </button>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Create New Action */}
+                  <div className="pt-4 border-t border-cream-dark">
+                    {category === 'CANDIDATE' ? (
+                      <button
+                        onClick={() => {
+                          setLetterType('OFFER');
+                          setCategory('CANDIDATE');
+                          setStep(2);
+                        }}
+                        className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-accent text-white font-black hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                      >
+                        <Plus size={18} /> Create New Candidate (Offer Letter)
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowAddEmployee(true)}
+                        className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-emerald-600 text-white font-black hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20"
+                      >
+                        <UserPlus size={18} /> Create New Employee
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 2: DESIGN */}
+              {step === 2 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Document Style</h2>
+                    <p className="text-slate-400">Choose the type of letter and a template</p>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="label uppercase tracking-widest text-[10px] font-black text-slate-400">Document Type</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {LETTER_TYPES.filter(t => t.cat === category).map(type => (
+                        <button key={type.id} onClick={() => setLetterType(type.id)} className={clsx(
+                          "p-4 rounded-2xl border-2 text-sm font-black transition-all",
+                          letterType === type.id ? "border-accent bg-accent/5 text-accent" : "border-cream-dark text-slate-400 hover:border-accent/30"
+                        )}>{type.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-4 pt-4 border-t border-cream-dark">
+                    <label className="label uppercase tracking-widest text-[10px] font-black text-slate-400">Available Templates</label>
+                    {currentTypeTemplates.length > 0 ? (
+                      <div className="space-y-3">
+                        {currentTypeTemplates.map(t => (
+                          <button key={t.id} onClick={() => setSelectedTemplate(t)} className={clsx(
+                            "w-full p-5 rounded-2xl border-2 text-left flex items-center justify-between transition-all",
+                            selectedTemplate?.id === t.id ? "border-accent bg-accent/5" : "border-cream-dark hover:border-accent/30"
+                          )}>
+                            <div className="font-black text-navy">{t.name}</div>
+                            {selectedTemplate?.id === t.id && <Check className="text-accent" size={20} />}
+                          </button>
+                        ))}
+                      </div>
+                    ) : <div className="p-8 text-center bg-cream/20 rounded-2xl border border-dashed border-cream-dark"><p className="text-slate-400 font-bold italic">No templates found for this type</p></div>}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: IDENTITY */}
+              {step === 3 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Personal Profile</h2>
+                    <p className="text-slate-400">Fill in the basic identification details</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="col-span-2 grid grid-cols-4 gap-4">
+                      <div className="col-span-1"><label className="label">Prefix</label><select className="select" value={form.prefix} onChange={e => updateForm('prefix', e.target.value)}><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></div>
+                      <div className="col-span-1.5"><label className="label">First Name</label><input className="input" value={form.firstName} onChange={e => updateForm('firstName', e.target.value)} /></div>
+                      <div className="col-span-1.5"><label className="label">Last Name</label><input className="input" value={form.lastName} onChange={e => updateForm('lastName', e.target.value)} /></div>
+                    </div>
+                    <div className="col-span-2"><label className="label group flex items-center gap-2">Father's / Guardian Name <Heart size={12} className="text-rose-400" /></label><input className="input" placeholder="Complete formal name" value={form.fatherName} onChange={e => updateForm('fatherName', e.target.value)} /></div>
+                    <div><label className="label">Date of Birth</label><input className="input" type="date" value={form.dob} onChange={e => updateForm('dob', e.target.value)} /></div>
+                    <div><label className="label">Gender</label><select className="select" value={form.gender} onChange={e => updateForm('gender', e.target.value)}><option>Male</option><option>Female</option><option>Other</option></select></div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: KYC */}
+              {step === 4 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Govt. Identifiers</h2>
+                    <p className="text-slate-400">PAN and Aadhaar are required for compliance</p>
+                  </div>
+                  <div className="space-y-6">
+                    <div className="group"><label className="label flex items-center gap-2">PAN Card Number <Shield size={14} className="text-accent" /></label><div className="relative"><Fingerprint className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} /><input className="input pl-14 h-14 font-mono tracking-widest uppercase" placeholder="ABCDE1234F" maxLength={10} value={form.pan} onChange={e => updateForm('pan', e.target.value)} /></div></div>
+                    <div className="group"><label className="label flex items-center gap-2">Aadhaar Card Number <Shield size={14} className="text-accent" /></label><div className="relative"><Fingerprint className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} /><input className="input pl-14 h-14 font-mono tracking-widest" placeholder="0000 0000 0000" maxLength={14} value={form.aadhaar} onChange={e => updateForm('aadhaar', e.target.value)} /></div></div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 5: CONTACT */}
+              {step === 5 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Connection Info</h2>
+                    <p className="text-slate-400">Official contact methods for records</p>
+                  </div>
+                  <div className="space-y-6">
+                    <div><label className="label uppercase tracking-widest font-black text-[10px] text-slate-400">Email Address</label><div className="relative"><Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} /><input className="input pl-14 h-14" placeholder="employee@fingrow.in" value={form.email} onChange={e => updateForm('email', e.target.value)} /></div></div>
+                    <div><label className="label uppercase tracking-widest font-black text-[10px] text-slate-400">Phone Number</label><div className="relative"><Phone className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} /><span className="absolute left-14 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400 ml-1">+91</span><input className="input pl-24 h-14" placeholder="99887 76655" value={form.mobile} onChange={e => updateForm('mobile', e.target.value)} /></div></div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 6: ADDRESS */}
+              {step === 6 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Permanent Residence</h2>
+                    <p className="text-slate-400">Full correspondence address details</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="col-span-2"><label className="label">Complete Address Line</label><input className="input h-14" placeholder="H No / Street / Landmark" value={form.addressLine} onChange={e => updateForm('addressLine', e.target.value)} /></div>
+                    <div><label className="label">District/City</label><input className="input" value={form.district} onChange={e => updateForm('district', e.target.value)} /></div>
+                    <div><label className="label">State</label><input className="input" value={form.state} onChange={e => updateForm('state', e.target.value)} /></div>
+                    <div><label className="label">Pin Code</label><input className="input" value={form.pinCode} onChange={e => updateForm('pinCode', e.target.value)} /></div>
+              {step === 7 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">
+                      {letterType === 'INTERNSHIP' ? 'Internship Assignment' : 'Career Details'}
+                    </h2>
+                    <p className="text-slate-400">Role, Department, and Reporting details</p>
+                  </div>
+                  <div className="space-y-5">
+                    {letterType === 'INTERNSHIP' ? (
+                      <div className="space-y-6">
+                        <div>
+                          <label className="label">DESIGNATION *</label>
+                          <input className="input" placeholder="e.g. Graphic Designer Intern" value={form.designation} onChange={e => updateForm('designation', e.target.value)} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">DEPARTMENT *</label>
+                            <select className="select" value={form.department} onChange={e => updateForm('department', e.target.value)}>
+                              <option value="">-- Select --</option>
+                              {depts.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="label">WORK LOCATION *</label>
+                            <select className="select" value={form.workLocation} onChange={e => updateForm('workLocation', e.target.value)}>
+                              <option value="">-- Select --</option>
+                              {locs.map(l => <option key={l.id} value={l.city}>{l.city}, {l.state}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">REPORTING MANAGER</label>
+                            <input className="input" placeholder="Manager name" value={form.manager} onChange={e => updateForm('manager', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="label">EMPLOYMENT TYPE *</label>
+                            <select className="select" value={form.employmentType} onChange={e => updateForm('employmentType', e.target.value)}>
+                              <option>Internship</option>
+                              <option>Full-Time</option>
+                              <option>Part-Time</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">INTERNSHIP DURATION (MONTHS)</label>
+                            <input className="input" type="number" placeholder="3" value={form.duration.replace(/\D/g, '')} onChange={e => updateForm('duration', e.target.value + ' Months')} />
+                          </div>
+                          <div>
+                            <label className="label">WORK MODE</label>
+                            <select className="select" value={form.workMode} onChange={e => updateForm('workMode', e.target.value)}>
+                              <option>Office</option>
+                              <option>Remote</option>
+                              <option>Hybrid</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">EFFECTIVE FROM *</label>
+                            <input className="input" type="date" value={form.effectiveFrom} onChange={e => updateForm('effectiveFrom', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="label">EFFECTIVE TO *</label>
+                            <input className="input" type="date" value={form.effectiveTo} onChange={e => updateForm('effectiveTo', e.target.value)} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">OFFER DATE *</label>
+                            <input className="input" type="date" value={form.offerDate} onChange={e => updateForm('offerDate', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="label">OFFER VALID TILL *</label>
+                            <input className="input" type="date" value={form.offerValidTill} onChange={e => updateForm('offerValidTill', e.target.value)} />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div><label className="label">Designation</label><input className="input" placeholder="Example: Lead Software Engineer" value={form.designation} onChange={e => updateForm('designation', e.target.value)} /></div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div><label className="label">Department</label><select className="select" value={form.department} onChange={e => updateForm('department', e.target.value)}><option value="">-- Choose --</option>{depts.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}</select></div>
+                          <div><label className="label">Work Location</label><select className="select" value={form.workLocation} onChange={e => updateForm('workLocation', e.target.value)}><option value="">-- Choose --</option>{locs.map(l => <option key={l.id} value={l.city}>{l.city}, {l.state}</option>)}</select></div>
+                        </div>
+                        <div><label className="label">Reporting Manager</label><input className="input" value={form.manager} onChange={e => updateForm('manager', e.target.value)} /></div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+ 
+              {/* STEP 8: COMPENSATION */}
+              {step === 8 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">
+                      {(letterType === 'INTERNSHIP' || form.employmentType === 'Internship') ? 'Stipend Package' : 'Compensation Split'}
+                    </h2>
+                    <p className="text-slate-400">Set the financial components for the letter</p>
+                  </div>
+                  <div className="bg-cream/20 p-8 rounded-[32px] border border-cream-dark">
+                    {letterType === 'PROBATION' ? (
+                      <div className="space-y-6">
+                        <div className="text-center mb-6">
+                            <h3 className="text-xl font-black text-navy">Probation Details</h3>
+                            <p className="text-xs text-slate-400">Review period and evaluation outcome</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">Date of Joining</label>
+                            <input className="input" type="date" value={form.joiningDate} onChange={e => updateForm('joiningDate', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="label">Probation Period</label>
+                            <select className="select" value={form.probationPeriod} onChange={e => updateForm('probationPeriod', e.target.value)}>
+                              <option>3 Months</option>
+                              <option>6 Months</option>
+                              <option>1 Year</option>
+                            </select>
+                          </div>
+                        </div>
+ 
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="label">Probation Start Date*</label>
+                            <input className="input" type="date" value={form.date} onChange={e => updateForm('date', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="label">Probation End Date*</label>
+                            <input className="input" type="date" value={form.probationEndDate} onChange={e => updateForm('probationEndDate', e.target.value)} />
+                          </div>
+                        </div>
+ 
+                        <div className="grid grid-cols-1 gap-4">
+                          <div className="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100">
+                             <label className="label font-black text-emerald-700">Formal Confirmation Date</label>
+                             <p className="text-[10px] text-emerald-600/70 mb-3 font-bold uppercase tracking-wider">Date employee formally joins as permanent member</p>
+                             <input className="input border-emerald-200 focus:border-emerald-500 h-14 text-lg font-black" type="date" value={form.confirmationDate} onChange={e => updateForm('confirmationDate', e.target.value)} />
+                          </div>
+                        </div>
+ 
+                        <div>
+                          <label className="label">Reviewer Name</label>
+                          <input className="input" placeholder="Enter name of evaluator" value={form.reviewerName} onChange={e => updateForm('reviewerName', e.target.value)} />
+                        </div>
+                        
+                        <div className="pt-4 border-t border-cream-dark">
+                          <label className="label font-black text-accent">Revised Annual CTC (if any)</label>
+                          <div className="relative">
+                            <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 text-accent" size={20} />
+                            <input className="input pl-14 h-16 border-accent/20 bg-white text-xl font-black text-navy" type="number" placeholder="Enter new salary amount" value={form.ctc} onChange={e => updateForm('ctc', e.target.value)} />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (letterType === 'INTERNSHIP' || form.employmentType === 'Internship') ? (
+                      <div className="space-y-6">
+                        <div className="text-center mb-6">
+                            <h3 className="text-xl font-black text-navy">Monthly Stipend</h3>
+                            <p className="text-xs text-slate-400">Fixed monthly allowance for the internship</p>
+                        </div>
+                        <div className="bg-white p-8 rounded-3xl border border-accent/10 shadow-xl shadow-accent/5">
+                          <label className="label font-black text-accent uppercase tracking-widest text-[10px]">Monthly Stipend Amount (INR) *</label>
+                          <div className="relative mt-3">
+                            <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 text-accent" size={24} />
+                            <input 
+                              className="input pl-14 h-20 border-accent/20 bg-cream/5 text-3xl font-black text-navy focus:ring-8 focus:ring-accent/5 transition-all" 
+                              type="number" 
+                              placeholder="e.g. 15000"
+                              value={form.ctc} 
+                              onChange={e => updateForm('ctc', e.target.value)} 
+                            />
+                          </div>
+                          <p className="text-[11px] text-slate-400 mt-4 font-bold italic leading-relaxed">
+                            Note: This amount will be processed as a fixed monthly stipend. 
+                            Statutory components like EPF/ESI/HRA are generally not applicable for interns.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-6">
+                          <div className="col-span-2">
+                            <label className="label font-black text-accent uppercase tracking-widest text-[10px]">
+                              Total CTC Offered (Annual) *
+                            </label>
+                            <div className="relative mt-2">
+                              <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 text-accent" size={20} />
+                              <input className="input pl-14 h-16 border-accent/20 bg-white text-xl font-black text-navy" type="number" value={form.ctc} onChange={e => updateForm('ctc', e.target.value)} />
+                            </div>
+                          </div>
+                          
+                          <div className="col-span-2 pt-4 border-t border-cream-dark">
+                            <label className="label uppercase tracking-widest text-[10px] font-black text-slate-400">Work Location (For this letter)</label>
+                            <input className="input mt-1" placeholder="e.g. Tirupati" value={form.letterWorkLocation} onChange={e => updateForm('letterWorkLocation', e.target.value)} />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4 col-span-2">
+                             <div><label className="label text-[10px] font-black uppercase tracking-widest">Basic %</label><input className="input text-lg font-black" value={form.basicPct} onChange={e => updateForm('basicPct', e.target.value)} /></div>
+                             <div><label className="label text-[10px] font-black uppercase tracking-widest">HRA %</label><input className="input text-lg font-black" value={form.hraPct} onChange={e => updateForm('hraPct', e.target.value)} /></div>
+                          </div>
+
+                          <div className="col-span-2">
+                             <label className="label text-[10px] font-black uppercase tracking-widest">Gratuity %</label>
+                             <input className="input text-lg font-black w-1/2" value={form.gratuityPct} onChange={e => updateForm('gratuityPct', e.target.value)} />
+                          </div>
+
+                          <div className="col-span-2 grid grid-cols-3 gap-4 pt-4 border-t border-cream-dark">
+                            <div>
+                               <label className="label text-[10px] font-black uppercase tracking-widest">Include EPF</label>
+                               <select className="select" value={form.includeEPF} onChange={e => updateForm('includeEPF', e.target.value)}>
+                                 <option>Yes</option><option>No</option>
+                               </select>
+                            </div>
+                            <div>
+                               <label className="label text-[10px] font-black uppercase tracking-widest">Include ESI</label>
+                               <select className="select" value={form.includeESI} onChange={e => updateForm('includeESI', e.target.value)}>
+                                 <option>Yes</option><option>No</option>
+                               </select>
+                            </div>
+                            <div>
+                               <label className="label text-[10px] font-black uppercase tracking-widest">Professional Tax</label>
+                               <select className="select" value={form.includePT} onChange={e => updateForm('includePT', e.target.value)}>
+                                 <option>Yes</option><option>No</option>
+                               </select>
+                            </div>
+                          </div>
+
+                          <div className="col-span-2 grid grid-cols-2 gap-4">
+                            <div>
+                               <label className="label text-[10px] font-black uppercase tracking-widest">Manual EPF ₹/mo (Optional)</label>
+                               <input className="input" placeholder="e.g. 1800" value={form.manualEPF} onChange={e => updateForm('manualEPF', e.target.value)} />
+                            </div>
+                            <div>
+                               <label className="label text-[10px] font-black uppercase tracking-widest">Manual ESI ₹/mo (Optional)</label>
+                               <input className="input" placeholder="e.g. 300" value={form.manualESI} onChange={e => updateForm('manualESI', e.target.value)} />
+                            </div>
+                          </div>
+
+                          {letterType === 'INCREMENT' && <div className="col-span-2"><label className="label">Current (Old) Annual CTC</label><input className="input" type="number" value={form.oldCtc} onChange={e => updateForm('oldCtc', e.target.value)} /></div>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {letterType === 'EXIT' && (
+                    <div className="space-y-4 pt-4 border-t border-cream-dark">
+                      <h3 className="text-sm font-black text-navy uppercase tracking-widest">Exit Clearances</h3>
+                      <div className="grid grid-cols-3 gap-3">
+                        <select className="select text-xs" value={form.exitType} onChange={e => updateForm('exitType', e.target.value)}><option>Resignation</option><option>Termination</option></select>
+                        <select className="select text-xs" value={form.assetStatus} onChange={e => updateForm('assetStatus', e.target.value)}><option>Returned</option><option>Pending</option></select>
+                        <input className="input text-xs" placeholder="Last Working Day" type="date" value={form.lastWorkingDay} onChange={e => updateForm('lastWorkingDay', e.target.value)} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* STEP 9: FINALIZE */}
+              {step === 9 && (
+                <div className="space-y-8">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Timeline & Authority</h2>
+                    <p className="text-slate-400">Set the dates and signing authority</p>
+                  </div>
+                  <div className="space-y-6">
+                    <div><label className="label">Effective Date of Document</label><div className="relative"><Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} /><input className="input pl-14 h-14" type="date" value={form.date} onChange={e => updateForm('date', e.target.value)} /></div></div>
+                    <div className="grid grid-cols-2 gap-4 p-6 bg-cream/20 rounded-3xl border border-cream-dark">
+                      <div className="col-span-2 text-[10px] font-black uppercase tracking-[3px] text-slate-400 mb-2">Authorized Signatory</div>
+                      {letterType === 'INTERNSHIP' && (
+                        <div className="col-span-2 mb-4">
+                          <label className="label">Internship Duration</label>
+                          <input className="input text-sm" placeholder="e.g. 3 Months" value={form.duration} onChange={e => updateForm('duration', e.target.value)} />
+                        </div>
+                      )}
+                      <div><label className="label">Signatory Name</label><input className="input text-sm" value={form.sigName} onChange={e => updateForm('sigName', e.target.value)} /></div>
+                      <div><label className="label">Designation</label><input className="input text-sm" value={form.sigDesignation} onChange={e => updateForm('sigDesignation', e.target.value)} /></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 10: REVIEW */}
+              {step === 10 && (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h2 className="text-3xl font-black text-navy mb-3">Review & Submit</h2>
+                    <p className="text-slate-400">Check all details before formal generation</p>
+                  </div>
+                  <div className="bg-navy rounded-[32px] p-8 text-white space-y-6 max-h-[450px] overflow-y-auto no-scrollbar shadow-2xl shadow-navy/20 border-2 border-white/10">
+                    <div className="flex items-center gap-6 pb-6 border-b border-white/10">
+                      <div className="w-16 h-16 bg-accent rounded-3xl flex items-center justify-center text-2xl font-black text-white">{form.firstName[0]}</div>
+                      <div>
+                        <div className="text-xl font-black">{form.firstName} {form.lastName}</div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <div className="text-xs font-bold text-accent uppercase tracking-widest">{form.designation}</div>
+                          {(form.employeeId || form.candidateId) && (
+                            <span className="text-[8px] font-black px-1.5 py-0.5 bg-white/10 rounded uppercase tracking-tighter">
+                              {category === 'CANDIDATE' ? `CND-${form.candidateId}` : `EMP-${form.employeeId}`}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-white/50">{form.email}</div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8 py-4">
+                      <div><div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">Document Info</div><div className="text-xs font-bold">{letterType} Letter</div><div className="text-[10px] text-white/60">{selectedTemplate?.name}</div></div>
+                      <div><div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">Identifiers</div><div className="text-xs font-bold">PAN: {form.pan || 'N/A'}</div><div className="text-xs font-bold">Aadhaar: {form.aadhaar || 'N/A'}</div></div>
+                      <div><div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">Employment</div><div className="text-xs font-bold">{form.department}</div><div className="text-[11px] text-white/60">{form.workLocation}</div></div>
+                      <div><div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">{letterType === 'INTERNSHIP' ? 'Monthly Stipend' : 'CTC (Annual)'}</div><div className="text-lg font-black text-accent">₹{Number(form.ctc).toLocaleString("en-IN")}</div></div>
+                    </div>
+                    <div className="pt-6 border-t border-white/10 text-center"><p className="text-[10px] text-white/40 italic font-medium">By generating, you confirm that all details above are legally accurate as per official records.</p></div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 11: SUCCESS */}
+              {step === 11 && (
+                <div className="text-center py-12 space-y-8">
+                  <div className="w-24 h-24 bg-emerald-500 text-white rounded-[32px] flex items-center justify-center mx-auto shadow-2xl shadow-emerald-500/30 ring-8 ring-emerald-500/10 rotate-3 transition-transform hover:rotate-0">
+                    <Check size={48} strokeWidth={3} />
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-4xl font-black text-navy leading-tight">Done!</h2>
+                    <p className="text-slate-400 font-bold max-w-sm mx-auto">The professional {letterType.toLowerCase()} document has been securely generated.</p>
+                  </div>
+                  <div className="flex flex-col gap-4 pt-6 max-w-sm mx-auto">
+                    <a href={`http://localhost:5000${genResult.pdfUrl}`} target="_blank" className="btn-primary w-full h-16 flex items-center justify-center gap-4 shadow-2xl shadow-navy/20 group">
+                      <Download size={24} className="group-hover:-translate-y-1 transition-transform" />
+                      <span className="text-lg">Download Document</span>
+                    </a>
+                    <button onClick={() => { setStep(1); setGenResult(null); }} className="text-xs font-black uppercase tracking-[3px] text-slate-300 hover:text-accent transition-all">Generate New Letter</button>
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* NAV CONTROLS */}
+            {step < 11 && (
+              <div className="flex items-center gap-6 mt-12 pt-8 border-t border-cream-dark">
+                {step > 1 && (
+                  <button onClick={back} className="w-14 h-14 rounded-2xl border-2 border-cream-dark flex items-center justify-center hover:bg-cream/50 transition-all text-navy shrink-0"><ChevronLeft size={24} /></button>
+                )}
+                <div className="flex-1">
+                  {step === 10 ? (
+                    <div className="flex gap-4 w-full">
+                      <button onClick={preview} disabled={loading} className="flex-1 btn-ghost h-14 border-2 border-cream-dark flex items-center justify-center gap-3 text-lg font-black hover:bg-cream/30 transition-all text-navy">
+                        <Eye size={22} /> Preview PDF
+                      </button>
+                      <button onClick={finalize} disabled={loading || !selectedTemplate} className="flex-[2] btn-primary h-14 flex items-center justify-center gap-3 text-lg font-black disabled:opacity-50 disabled:grayscale transition-all shadow-xl shadow-accent/20">
+                        {loading ? <RefreshCw className="animate-spin" size={24} /> : <>Generate Now <Shield size={22} /></>}
+                      </button>
+                    </div>
+                  ) : (
+                    step > 1 && (
+                      <button onClick={next} className="w-full btn-accent h-14 flex items-center justify-center gap-3 text-lg font-black shadow-2xl shadow-accent/10 hover:shadow-accent/30 transition-all">
+                        Continue <ChevronRight size={24} />
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Add Employee Modal */}
+      {showAddEmployee && (
+        <QuickAddEmployeeModal
+          onClose={() => setShowAddEmployee(false)}
+          onSaved={() => { loadBaseData(); setShowAddEmployee(false); }}
+        />
+      )}
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; border: 4px solid transparent; background-clip: content-box; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+      `}</style>
+    </AppShell>
+  );
+}

@@ -1,0 +1,420 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(HR)
+  name      String
+  smtpUser  String?
+  smtpPass  String?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  HR
+  RECRUITER
+  USER
+}
+
+model Company {
+  id            String  @id @default(cuid())
+  name          String  @default("Fingrow Consulting Services Pvt Ltd")
+  pan           String?
+  gstin         String?
+  tan           String?
+  pf            String?
+  esi           String?
+  address       String?
+  city          String?
+  state         String?
+  pincode       String?
+  phone         String?
+  email         String?
+  website       String?
+  logoUrl       String?
+  financialYear String  @default("April-March")
+  currency      String  @default("INR")
+  secondaryEmails String? @default("[]")
+  companyType   String?
+  description   String?
+}
+
+model Department {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  head      String?
+  employees Employee[]
+}
+
+model Designation {
+  id        String     @id @default(cuid())
+  title     String     @unique
+  level     Int?
+  employees Employee[]
+}
+
+model Employee {
+  id             String        @id @default(cuid())
+  employeeId     String        @unique
+  name           String
+  email          String        @unique
+  phone          String?
+  dob            DateTime?
+  gender         String?
+  // ── Detailed Address (replaces / supplements old `address` field) ──
+addressLine1  String?
+addressLine2  String?
+city          String?
+state         String?
+pincode       String?
+country       String?   @default("India")
+
+    
+  department     String
+  designation    String
+  departmentRel  Department?   @relation(fields: [department], references: [name])
+  designationRel Designation?  @relation(fields: [designation], references: [title])
+  status         EmpStatus     @default(PROBATION)
+  joinDate       DateTime
+  confirmDate    DateTime?
+  salary         Float         @default(0)
+  pan            String?
+  aadhaar        String?
+  uan            String?       @unique
+  pfNumber       String?       @unique
+  bankName       String?
+  accountNo      String?
+  ifsc           String?
+  reportingTo    String?
+  workLocation   String?
+  createdAt      DateTime      @default(now())
+  attendances    Attendance[]
+  payslips       Payslip[]
+  documents      Document[]
+  letters        Letter[]
+  leaveRecords   LeaveRecord[]
+  timesheets     Timesheet[]
+  salaryHistory  SalaryHistory[]
+
+  // Payroll / Salary Overrides
+  basicPct       Float?        @default(50)
+  hraPct         Float?        @default(40)
+  gratuityPct    Float?        @default(4.81)
+  epfEmployer    Float?
+  epfEmployee    Float?
+  esiEmployer    Float?
+  esiEmployee    Float?
+  ptOverride     Float?
+}
+
+model SalaryHistory {
+  id              String   @id @default(cuid())
+  employeeId      String
+  salary          Float    // Monthly Gross
+  basicPct        Float?
+  hraPct          Float?
+  epfEmployee     Float?
+  epfEmployer     Float?
+  esiEmployee     Float?
+  esiEmployer     Float?
+  professionalTax Float?
+  label           String
+  designation     String?
+  department      String?
+  remarks         String?
+  effectiveFrom   DateTime
+  effectiveTo     DateTime?
+  createdAt       DateTime @default(now())
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+enum EmpStatus {
+  ACTIVE
+  PROBATION
+  INACTIVE
+  CONTRACT
+  INTERN
+}
+
+model Candidate {
+  id            String    @id @default(cuid())
+  candidateId   String?   @unique
+  name          String
+  email         String
+  phone         String?
+  position      String
+  department    String?
+  stage         Stage     @default(APPLIED)
+  resumeUrl     String?
+  notes         String?
+  expectedCTC   Float?
+  offeredCTC    Float?
+  interviewDate DateTime?
+  joiningDate   DateTime?
+  createdAt     DateTime  @default(now())
+}
+
+enum Stage {
+  APPLIED
+  SCREENING
+  INTERVIEW
+  OFFER_SENT
+  OFFER_ACCEPTED
+  ONBOARDING
+  HIRED
+  REJECTED
+}
+
+model Onboarding {
+  id          String    @id @default(cuid())
+  employeeId  String
+  taskName    String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  dueDate     DateTime?
+  assignedTo  String?
+  createdAt   DateTime  @default(now())
+}
+
+model Attendance {
+  id         String    @id @default(cuid())
+  employeeId String
+  date       DateTime
+  status     AttStatus @default(PRESENT)
+  checkIn    String?
+  checkOut   String?
+  workHours  Float?
+  remarks    String?
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+enum AttStatus {
+  PRESENT
+  ABSENT
+  LATE
+  HALFDAY
+  HOLIDAY
+  WEEKEND
+  WFH
+  COMPANY_LEAVE
+}
+
+model Payslip {
+  id           String   @id @default(cuid())
+  employeeId   String
+  month        String
+  year         Int
+  workingDays  Int      @default(26)
+  presentDays  Int      @default(26)
+  basic        Float
+  hra          Float
+  transport    Float    @default(0)
+  specialAllow Float    @default(0)
+  otherAllow   Float    @default(0)
+  grossSalary  Float
+  epf             Float
+  esi             Float    @default(0)
+  tds             Float    @default(0)
+  professionalTax Float    @default(0)
+  otherDeduct     Float    @default(0)
+  totalDeduct     Float
+  netSalary       Float
+  status       String   @default("GENERATED")
+  pdfUrl       String?
+  generated    DateTime @default(now())
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  // Overrides
+  basicPct     Float?
+  hraPct       Float?
+  epfPct       Float?
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  employeeId String
+  type       DocType
+  name       String?
+  fileUrl    String
+  verified   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+enum DocType {
+  OFFER_LETTER
+  APPOINTMENT_LETTER
+  PROBATION_LETTER
+  CONFIRMATION_LETTER
+  INCREMENT_LETTER
+  EXPERIENCE_LETTER
+  RELIEVING_LETTER
+  EXIT_LETTER
+  PAYSLIP
+  AADHAAR
+  PAN
+  RESUME
+  BANK_DETAILS
+  OTHER
+}
+
+model Letter {
+  id          String     @id @default(cuid())
+  employeeId  String?
+  candidateId String?
+  type        LetterType
+  content     String
+  metadata    Json?      @default("{}")
+  pdfUrl      String?
+  sentByEmail Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  employee    Employee?  @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+enum LetterType {
+  OFFER
+  APPOINTMENT
+  PROBATION
+  CONFIRMATION
+  INCREMENT
+  EXPERIENCE
+  RELIEVING
+  WARNING
+  TERMINATION
+  EXIT
+  INTERNSHIP
+  CONTRACT
+}
+
+model LetterTemplate {
+  id                String     @id @default(cuid())
+  name              String
+  type              LetterType
+  content           String
+  annexure1         String?
+  annexure2         String?
+  compensationNotes String?
+  isDefault         Boolean    @default(false)
+
+  @@unique([name, type])
+}
+
+model Policy {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String
+  version   String   @default("1.0")
+  published Boolean  @default(false)
+  pdfUrl    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LeaveRecord {
+  id         String   @id @default(cuid())
+  employeeId String
+  leaveType  String
+  fromDate   DateTime
+  toDate     DateTime
+  days       Int
+  reason     String?
+  status     String   @default("PENDING")
+  createdAt  DateTime @default(now())
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model SalaryComponent {
+  id              String  @id @default(cuid())
+  name            String  @unique
+  type            String
+  calcType        String
+  value           Float
+  amount          Float   @default(0)
+  includeInLetter Boolean @default(true)
+  taxable         Boolean @default(true)
+  active          Boolean @default(true)
+}
+
+model Location {
+  id      String @id @default(cuid())
+  country String @default("India")
+  state   String
+  city    String
+}
+
+model ProfessionalTax {
+  id        String @id @default(cuid())
+  state     String
+  payMin    Float
+  payMax    Float
+  deduction Float
+}
+
+model HraRule {
+  id    String @id @default(cuid())
+  state String
+  city  String
+  value Float
+}
+
+model Timesheet {
+  id            String           @id @default(cuid())
+  employeeId    String
+  employee      Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  type          String           @default("WEEKLY") // DAILY or WEEKLY
+  startDate     DateTime         // Start of period
+  endDate       DateTime         // End of period
+  totalHours    Float            @default(0)
+  totalOvertime Float            @default(0)
+  status        TimesheetStatus  @default(DRAFT)
+  submittedAt   DateTime?
+  reviewedAt    DateTime?
+  reviewedBy    String?          // Manager Name
+  comments      String?
+  entries       TimesheetEntry[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([employeeId, startDate, type])
+}
+
+model TimesheetEntry {
+  id            String    @id @default(cuid())
+  timesheetId   String
+  timesheet     Timesheet @relation(fields: [timesheetId], references: [id], onDelete: Cascade)
+  date          DateTime
+  project       String?
+  task          String
+  hours         Float
+  breakHours    Float     @default(0)
+  overtimeHours Float     @default(0)
+  description   String?
+  status        String?   @default("Present")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum TimesheetStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model FileStorage {
+  id String @id @default(cuid())
+  filename String
+  mimeType String
+  data Bytes
+  createdAt DateTime @default(now())
+}

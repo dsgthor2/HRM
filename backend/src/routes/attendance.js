@@ -115,4 +115,56 @@ router.post("/bulk", auth, async (req, res) => {
   res.json(results);
 });
 
+// --- LIVE STATUS TRACKING ---
+
+router.get("/live-status/stats", auth, async (req, res) => {
+  try {
+    const stats = await prisma.employee.groupBy({
+      by: ['currentStatus'],
+      _count: { id: true },
+    });
+    
+    const result = { ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0 };
+    stats.forEach(s => {
+      if (s.currentStatus) {
+         result[s.currentStatus] = s._count.id;
+      }
+    });
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+router.put("/live-status", auth, async (req, res) => {
+  try {
+    const { status, employeeId } = req.body;
+    if (!status || !employeeId) return res.status(400).json({ message: "Status and employeeId required" });
+    
+    const updated = await prisma.employee.update({
+      where: { id: employeeId },
+      data: { 
+        currentStatus: status,
+        lastStatusUpdate: new Date()
+      }
+    });
+    res.json({ currentStatus: updated.currentStatus, lastStatusUpdate: updated.lastStatusUpdate });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+router.get("/live-status/:employeeId", auth, async (req, res) => {
+  try {
+    const emp = await prisma.employee.findUnique({
+      where: { id: req.params.employeeId },
+      select: { currentStatus: true, lastStatusUpdate: true }
+    });
+    if (!emp) return res.status(404).json({ message: "Not found" });
+    res.json(emp);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
 export default router;

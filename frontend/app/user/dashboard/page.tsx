@@ -147,6 +147,16 @@ export default function UserDashboard() {
     } catch {}
   };
 
+  const updateLiveStatus = async (status: string) => {
+    if (!employee) return;
+    try {
+      const r = await api.put("/attendance/live-status", { status, employeeId: employee.id });
+      setEmployee({ ...employee, currentStatus: r.data.currentStatus, lastStatusUpdate: r.data.lastStatusUpdate });
+    } catch (e: any) {
+      alert("Failed to update status");
+    }
+  };
+
   // Day mark
   const [showMarkModal, setShowMarkModal] = useState(false);
   const [markDate, setMarkDate] = useState("");
@@ -364,6 +374,49 @@ export default function UserDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Live Status Widget */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-sm text-slate-700 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              My Current Status
+            </h3>
+            {employee?.currentStatus && (
+              <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                Updated: {new Date(employee.lastStatusUpdate).toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { id: "ONLINE", label: "Online", icon: <CheckCircle2 size={16}/>, activeClass: "bg-emerald-50 border-emerald-200 text-emerald-700 ring-2 ring-emerald-500/20", iconBg: "bg-emerald-100" },
+              { id: "IN_MEETING", label: "In Meeting", icon: <MonitorSmartphone size={16}/>, activeClass: "bg-rose-50 border-rose-200 text-rose-700 ring-2 ring-rose-500/20", iconBg: "bg-rose-100" },
+              { id: "ON_BREAK", label: "On Break", icon: <Clock size={16}/>, activeClass: "bg-amber-50 border-amber-200 text-amber-700 ring-2 ring-amber-500/20", iconBg: "bg-amber-100" },
+              { id: "OFFLINE", label: "Offline", icon: <LogOut size={16}/>, activeClass: "bg-slate-100 border-slate-300 text-slate-800 ring-2 ring-slate-500/20", iconBg: "bg-slate-200" },
+            ].map(s => {
+              const isActive = employee?.currentStatus === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => updateLiveStatus(s.id)}
+                  disabled={!employee || isActive}
+                  className={clsx(
+                    "flex flex-col items-center justify-center p-3 rounded-xl border transition-all gap-2",
+                    isActive
+                      ? s.activeClass
+                      : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50"
+                  )}
+                >
+                  <div className={clsx("w-8 h-8 rounded-full flex items-center justify-center", isActive ? s.iconBg : "bg-slate-100")}>
+                    {s.icon}
+                  </div>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wide">{s.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

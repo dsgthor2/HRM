@@ -25,6 +25,13 @@ enum Role {
   USER
 }
 
+enum CurrentStatus {
+  ONLINE
+  OFFLINE
+  IN_MEETING
+  ON_BREAK
+}
+
 model Company {
   id            String  @id @default(cuid())
   name          String  @default("DefenseBlu Private Limited")
@@ -97,6 +104,8 @@ country       String?   @default("India")
   reportingTo    String?
   workLocation   String?
   createdAt      DateTime      @default(now())
+  currentStatus  CurrentStatus @default(OFFLINE)
+  lastStatusUpdate DateTime?
   attendances    Attendance[]
   payslips       Payslip[]
   documents      Document[]

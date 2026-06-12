@@ -29,18 +29,21 @@ export default function Dashboard() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [hiringId, setHiringId] = useState<string | null>(null);
+  const [liveStatus, setLiveStatus] = useState({ ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0 });
 
   // Load data function to refresh list
   const loadData = async () => {
     try {
-      const [dashRes, candRes, empRes] = await Promise.all([
+      const [dashRes, candRes, empRes, liveRes] = await Promise.all([
         api.get("/dashboard").catch(() => ({ data: null })),
         api.get("/candidates").catch(() => ({ data: [] })),
         api.get("/employees").catch(() => ({ data: [] })),
+        api.get("/attendance/live-status/stats").catch(() => ({ data: null })),
       ]);
       if (dashRes.data) setData(dashRes.data);
       setCandidates(candRes.data || []);
       setEmployees(empRes.data || []);
+      if (liveRes.data) setLiveStatus(liveRes.data);
     } catch (err) {
       console.error("Reload failed", err);
     }
@@ -91,18 +94,20 @@ export default function Dashboard() {
 
     (async () => {
       try {
-        const [dashRes, candRes, empRes, deptRes, desigRes] = await Promise.all([
+        const [dashRes, candRes, empRes, deptRes, desigRes, liveRes] = await Promise.all([
           api.get("/dashboard").catch(e => ({ data: null })),
           api.get("/candidates").catch(e => ({ data: [] })),
           api.get("/employees").catch(e => ({ data: [] })),
           api.get("/company/departments").catch(e => ({ data: [] })),
           api.get("/company/designations").catch(e => ({ data: [] })),
+          api.get("/attendance/live-status/stats").catch(e => ({ data: null })),
         ]);
         if (dashRes.data) setData(dashRes.data);
         setCandidates(candRes.data || []);
         setEmployees(empRes.data || []);
         setDepartments(deptRes.data || []);
         setDesignations(desigRes.data || []);
+        if (liveRes.data) setLiveStatus(liveRes.data);
       } catch (err) {
         console.error("Dashboard total failure", err);
       } finally {
@@ -201,6 +206,33 @@ export default function Dashboard() {
     <AppShell title="Dashboard">
       <div className="space-y-6">
 
+        {/* ROW 0: Live Status Monitor */}
+        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[80px] -z-10 opacity-20 translate-x-1/2 -translate-y-1/2" />
+          <h3 className="font-black text-white text-[15px] mb-4 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Live Employee Status
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl font-black text-emerald-400">{liveStatus.ONLINE || 0}</span>
+              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">Online</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl font-black text-rose-400">{liveStatus.IN_MEETING || 0}</span>
+              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">In Meeting</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl font-black text-amber-400">{liveStatus.ON_BREAK || 0}</span>
+              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">On Break</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl font-black text-slate-400">{liveStatus.OFFLINE || 0}</span>
+              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">Offline</span>
+            </div>
+          </div>
+        </div>
+
         {/* ROW 1: HR Activities */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -z-10 opacity-60 translate-x-1/2 -translate-y-1/2" />
@@ -288,17 +320,17 @@ export default function Dashboard() {
                   ))}
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-                  <div className="relative flex-1">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full">
+                  <div className="relative flex-1 w-full">
                     <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" placeholder="Search by Name or Designation" value={search} onChange={e => setSearch(e.target.value)} />
                   </div>
-                  <div className="flex gap-3">
-                    <select className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
+                  <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <select className="flex-1 w-full sm:w-auto px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
                       <option value="">All Departments</option>
                       {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
                     </select>
-                    <select className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={desigFilter} onChange={e => setDesigFilter(e.target.value)}>
+                    <select className="flex-1 w-full sm:w-auto px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={desigFilter} onChange={e => setDesigFilter(e.target.value)}>
                       <option value="">All Designations</option>
                       {designations.map(d => <option key={d.id} value={d.title}>{d.title}</option>)}
                     </select>

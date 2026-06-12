@@ -90,7 +90,7 @@ export default function UserDashboard() {
   useEffect(() => {
     const u = getUser();
     if (!u) { router.push("/login"); return; }
-    if (u.role === "ADMIN" || u.role === "SUPER_ADMIN") { router.push("/dashboard"); return; }
+    // DO NOT force redirect admins out of user dashboard, they need to access their own attendance!
     setUser(u);
     setMounted(true);
     setProfileForm({ name: u.name || "", phone: "", department: "", designation: "" });

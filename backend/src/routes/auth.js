@@ -44,6 +44,23 @@ router.post("/login", async (req, res) => {
       return res.status(403).json({ message: "Your account has been suspended or is currently on hold. Please contact the administrator." });
     }
 
+    // Auto-create Employee profile for ADMIN and SUPER_ADMIN if it doesn't exist
+    if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+      const existingEmp = await prisma.employee.findFirst({ where: { email: user.email } });
+      if (!existingEmp) {
+        await prisma.employee.create({
+          data: {
+            name: user.name,
+            email: user.email,
+            department: "Management",
+            designation: user.role === "SUPER_ADMIN" ? "Super Admin" : "Administrator",
+            status: "ACTIVE",
+            joinDate: new Date()
+          }
+        });
+      }
+    }
+
     const token = jwt.sign(
       { id: user.id, role: user.role, name: user.name, email: user.email },
       process.env.JWT_SECRET,

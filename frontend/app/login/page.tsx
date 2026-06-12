@@ -48,8 +48,8 @@ export default function LoginPage() {
     try {
       const res = await api.post("/auth/login", loginForm);
       setAuth(res.data.token, res.data.user);
-      // Redirect based on role
-      if (res.data.user.role === "ADMIN" || res.data.user.role === "SUPER_ADMIN") {
+      // Redirect based on selected portal mode (allow admins to access employee portal)
+      if (portalMode === "ADMIN" && (res.data.user.role === "ADMIN" || res.data.user.role === "SUPER_ADMIN")) {
         router.push("/dashboard");
       } else {
         router.push("/user/dashboard");

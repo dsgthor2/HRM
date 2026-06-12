@@ -104,6 +104,11 @@ country       String?   @default("India")
   leaveRecords   LeaveRecord[]
   timesheets     Timesheet[]
   salaryHistory  SalaryHistory[]
+  assets         Asset[]
+  expenses       Expense[]
+  goals          Goal[]
+  reviews        PerformanceReview[] @relation("Reviewee")
+  givenReviews   PerformanceReview[] @relation("Reviewer")
 
   // Payroll / Salary Overrides
   basicPct       Float?        @default(50)
@@ -417,4 +422,56 @@ model FileStorage {
   mimeType String
   data Bytes
   createdAt DateTime @default(now())
+}
+
+model Asset {
+  id           String   @id @default(cuid())
+  name         String
+  type         String   // Laptop, Monitor, License, etc.
+  serialNumber String?
+  assignedToId String?
+  assignedTo   Employee? @relation(fields: [assignedToId], references: [id])
+  assignedDate DateTime?
+  status       String   @default("AVAILABLE") // AVAILABLE, ASSIGNED, MAINTENANCE, RETIRED
+  notes        String?
+  createdAt    DateTime @default(now())
+}
+
+model Expense {
+  id           String   @id @default(cuid())
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  category     String   // TRAVEL, MEALS, INTERNET, OTHER
+  amount       Float
+  date         DateTime
+  description  String?
+  receiptUrl   String?
+  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED, REIMBURSED
+  approvedBy   String?
+  createdAt    DateTime @default(now())
+}
+
+model Goal {
+  id           String   @id @default(cuid())
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  status       String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, COMPLETED, CANCELLED
+  progress     Int      @default(0) // 0 to 100
+  dueDate      DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model PerformanceReview {
+  id           String   @id @default(cuid())
+  employeeId   String
+  employee     Employee @relation("Reviewee", fields: [employeeId], references: [id], onDelete: Cascade)
+  reviewerId   String
+  reviewer     Employee @relation("Reviewer", fields: [reviewerId], references: [id])
+  reviewPeriod String   // e.g. Q1 2026
+  rating       Int?     // 1 to 5
+  feedback     String?
+  status       String   @default("DRAFT") // DRAFT, SUBMITTED, ACKNOWLEDGED
+  createdAt    DateTime @default(now())
 }

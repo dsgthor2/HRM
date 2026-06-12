@@ -21,7 +21,7 @@ interface UnifiedPerson {
   original: any;
 }
 
-const PIE_COLORS = ["#1d4ed8", "#38bdf8", "#818cf8", "#c084fc"];
+const PIE_COLORS = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899"];
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -202,32 +202,56 @@ export default function Dashboard() {
       <div className="space-y-6">
 
         {/* ROW 1: HR Activities */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-          <h3 className="font-black text-slate-800 text-[15px] mb-4">HR Activities</h3>
-          <div className="flex flex-wrap gap-3">
-            <div className="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl p-4 flex items-center justify-center flex-col text-center min-w-[120px]">
-              <span className="text-3xl font-black text-blue-600">{data?.kpis?.totalCandidates || 0}</span>
-              <span className="text-xs font-bold text-slate-500 uppercase mt-1 tracking-widest">Active Offers</span>
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -z-10 opacity-60 translate-x-1/2 -translate-y-1/2" />
+          <h3 className="font-black text-slate-800 text-[15px] mb-4 flex items-center justify-between">
+            <span>HR Activities</span>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100 flex items-center gap-1"><TrendingUp size={12}/> +12% this week</span>
+          </h3>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 bg-gradient-to-b from-blue-50/50 to-white border border-blue-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
+              <span className="text-4xl font-black text-blue-600 tracking-tight group-hover:scale-105 transition-transform">{data?.kpis?.totalCandidates || 0}</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Active Offers</span>
             </div>
-            <div className="flex-1 bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 flex items-center justify-center flex-col text-center min-w-[120px]">
-              <span className="text-3xl font-black text-emerald-600">{data?.kpis?.payslipsThisMonth || 0}</span>
-              <span className="text-xs font-bold text-slate-500 uppercase mt-1 tracking-widest">Payslips Issued</span>
+            <div className="flex-1 bg-gradient-to-b from-emerald-50/50 to-white border border-emerald-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
+              <span className="text-4xl font-black text-emerald-600 tracking-tight group-hover:scale-105 transition-transform">{data?.kpis?.payslipsThisMonth || 0}</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Payslips Issued</span>
             </div>
-            <div className="flex-1 bg-amber-50/50 border border-amber-100 rounded-xl p-4 flex items-center justify-center flex-col text-center min-w-[120px]">
-              <span className="text-3xl font-black text-amber-600">{candidates.filter(c => c.stage === 'OFFER_ACCEPTED').length || 0}</span>
-              <span className="text-xs font-bold text-slate-500 uppercase mt-1 tracking-widest">Ready to Onboard</span>
+            <div className="flex-1 bg-gradient-to-b from-amber-50/50 to-white border border-amber-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
+              <span className="text-4xl font-black text-amber-500 tracking-tight group-hover:scale-105 transition-transform">{candidates.filter(c => c.stage === 'OFFER_ACCEPTED').length || 0}</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Ready to Onboard</span>
             </div>
-            <div className="flex-1 bg-purple-50/50 border border-purple-100 rounded-xl p-4 flex items-center justify-center flex-col text-center min-w-[120px]">
-              <span className="text-3xl font-black text-purple-600">0</span>
-              <span className="text-xs font-bold text-slate-500 uppercase mt-1 tracking-widest">Pending Confirms</span>
+            <div className="flex-1 bg-gradient-to-b from-purple-50/50 to-white border border-purple-100/80 rounded-xl p-5 flex items-center justify-center flex-col text-center min-w-[140px] shadow-sm hover:shadow-md transition-all group">
+              <span className="text-4xl font-black text-purple-600 tracking-tight group-hover:scale-105 transition-transform">0</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase mt-2 tracking-widest">Pending Confirms</span>
             </div>
           </div>
         </div>
 
-        {/* ROW 2: Employee List + Quick Actions (directly after HR Activities) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-full">
+        {/* ROW 1.5: Quick Actions (Redesigned from Sidebar) */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h3 className="font-black text-slate-800 text-[15px] mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[
+              { title: "Offer Letter", icon: <FileText size={18}/>, color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", path: "/hrm/emp-documents/offer-letter?type=OFFER" },
+              { title: "Onboarding", icon: <Users size={18}/>, color: "text-indigo-600", bg: "bg-indigo-50", border: "border-indigo-100", path: "/hrm/onboarding" },
+              { title: "Attendance", icon: <CalendarCheck size={18}/>, color: "text-teal-600", bg: "bg-teal-50", border: "border-teal-100", path: "/hrm/attendance" },
+              { title: "Probation", icon: <CheckCircle2 size={18}/>, color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100", path: "/hrm/emp-documents/probation-letter?type=PROBATION" },
+              { title: "Payslips", icon: <FileText size={18}/>, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100", path: "/hrm/payslip" },
+              { title: "Separation", icon: <LogOut size={18} className="translate-x-0.5"/>, color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-100", path: "/hrm/emp-documents/exit-letter?type=EXIT" },
+            ].map((item, i) => (
+              <Link href={item.path} key={i} className="group flex flex-col items-center justify-center p-4 bg-slate-50/50 border border-slate-100 rounded-xl hover:bg-white hover:shadow-md transition-all text-center">
+                <div className={clsx("w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-sm border", item.bg, item.color, item.border)}>
+                  {item.icon}
+                </div>
+                <span className="text-[12px] font-bold text-slate-700">{item.title}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ROW 2: Employee List (Full Width Now) */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
@@ -296,8 +320,16 @@ export default function Dashboard() {
                         <div>
                           <div className="font-black text-slate-800 text-sm">{item.name}</div>
                           <div className="text-[11px] text-slate-500 truncate max-w-[220px]">{item.designation} {item.department ? `- ${item.department}` : ""}</div>
-                          <div className={clsx("inline-block mt-1 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded shadow-sm border", item.type === "Candidate" ? "bg-blue-600 border-blue-700 text-white" : "bg-emerald-50 border-emerald-200 text-emerald-700")}>
-                            {item.type}
+                          <div className="flex gap-2 mt-1.5">
+                            <div className={clsx("inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded shadow-sm border", item.type === "Candidate" ? "bg-blue-600 border-blue-700 text-white" : "bg-emerald-50 border-emerald-200 text-emerald-700")}>
+                              {item.type}
+                            </div>
+                            <div className={clsx("inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded shadow-sm border backdrop-blur-sm", 
+                              item.status === 'ACTIVE' ? "bg-emerald-100/80 border-emerald-300 text-emerald-800" : 
+                              item.status === 'CANDIDATE' ? "bg-amber-100/80 border-amber-300 text-amber-800" :
+                              "bg-slate-100/80 border-slate-300 text-slate-800")}>
+                              {item.status.replace(/_/g, ' ')}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -418,61 +450,6 @@ export default function Dashboard() {
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:text-slate-700 disabled:opacity-50 shadow-sm"><ChevronRight size={16}/></button>
               </div>
             </div>
-          </div>
-
-          <div className="space-y-6">
-            {/* For New Candidate Block */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center"><Users size={16}/></div>
-                <h3 className="font-black text-slate-800 text-lg">For New Candidate</h3>
-              </div>
-              <p className="text-sm text-slate-500 mb-5 leading-relaxed">
-                Use for new hires not yet in Offrd. No employee record required.
-              </p>
-              <Link href="/hrm/emp-documents/offer-letter?type=OFFER" className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all group">
-                <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                  <FileText size={20} />
-                </div>
-                <div>
-                  <div className="font-black text-slate-800">Offer Letter</div>
-                  <div className="text-xs text-slate-500 mt-0.5">Create offer for candidates</div>
-                </div>
-              </Link>
-            </div>
-
-            {/* For Existing Employees Block */}
-            <div className="bg-blue-50/50 rounded-2xl border border-blue-100 p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center"><UserPlus size={16} className="-scale-x-100"/></div>
-                <h3 className="font-black text-slate-800 text-lg">For Existing Employees</h3>
-              </div>
-              <p className="text-sm text-slate-500 mb-5 leading-relaxed">
-                Use for current employees already in Offrd (either converted from a candidate or added using 'Add New Employee').
-              </p>
-              <div className="space-y-3">
-                {[
-                  { title: "Onboarding", sub: "Welcome new joiners", icon: <Users size={20}/>, color: "bg-blue-600", path: "/hrm/onboarding" },
-                  { title: "View All Attendance", sub: "Check daily attendance for all employees.", icon: <CalendarCheck size={20}/>, color: "bg-teal-600", path: "/hrm/attendance" },
-                  { title: "Probation Letter", sub: "Generate probation confirmation letters.", icon: <CheckCircle2 size={20}/>, color: "bg-blue-600", path: "/hrm/emp-documents/probation-letter?type=PROBATION" },
-                  { title: "Increment Letter", sub: "Generate increment letters.", icon: <TrendingUp size={20}/>, color: "bg-blue-600", path: "/hrm/emp-documents/increment-letter?type=INCREMENT" },
-                  { title: "Separation Letter", sub: "Create separation letters.", icon: <LogOut size={20} className="translate-x-0.5"/>, color: "bg-blue-600", path: "/hrm/emp-documents/exit-letter?type=EXIT" },
-                  { title: "Generate Payslip", sub: "Generate and download employee payslips.", icon: <FileText size={20}/>, color: "bg-blue-600", path: "/hrm/payslip" },
-                ].map((item, i) => (
-                  <Link href={item.path} key={i} className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-md transition-all group">
-                    <div className={clsx("w-12 h-12 rounded-xl text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform", item.color)}>
-                      {item.icon}
-                    </div>
-                    <div>
-                      <div className="font-black text-slate-800 leading-tight">{item.title}</div>
-                      <div className="text-xs text-slate-500 mt-1">{item.sub}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* ROW 3: Tasks in Progress & Charts (below employee list) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -533,7 +510,7 @@ export default function Dashboard() {
                     <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} dataKey="value" stroke="none" paddingAngle={2}>
                       {pieData.map((_: any, i: number) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>

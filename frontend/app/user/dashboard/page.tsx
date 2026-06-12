@@ -12,6 +12,10 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import TimesheetManager from "@/components/user/TimesheetManager";
+import MyAssets from "@/components/user/MyAssets";
+import MyExpenses from "@/components/user/MyExpenses";
+import MyGoals from "@/components/user/MyGoals";
+import { MonitorSmartphone, CreditCard, Target } from "lucide-react";
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -26,7 +30,7 @@ const STATUS_COLOR: Record<string, string> = {
   WEEKEND: "bg-slate-100 text-slate-500 border-slate-200",
 };
 
-type Tab = "attendance" | "leaves" | "payslips" | "profile" | "timesheets";
+type Tab = "attendance" | "leaves" | "payslips" | "profile" | "timesheets" | "assets" | "expenses" | "performance";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -45,6 +49,11 @@ export default function UserDashboard() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [letters, setLetters] = useState<any[]>([]);
   const [timesheets, setTimesheets] = useState<any[]>([]);
+
+  // New features
+  const [myAssets, setMyAssets] = useState<any[]>([]);
+  const [myExpenses, setMyExpenses] = useState<any[]>([]);
+  const [myGoals, setMyGoals] = useState<any[]>([]);
 
   // ... (existing state)
 
@@ -98,6 +107,22 @@ export default function UserDashboard() {
       loadMyTimesheets();
     }
   }, [mounted, month, year]);
+
+  useEffect(() => {
+    if (employee) loadMyData();
+  }, [employee]);
+
+  const loadMyData = async () => {
+    if (!employee) return;
+    try {
+      const a = await api.get(`/assets/employee/${employee.id}`);
+      setMyAssets(a.data);
+      const e = await api.get(`/expenses/employee/${employee.id}`);
+      setMyExpenses(e.data);
+      const g = await api.get(`/performance/goals/employee/${employee.id}`);
+      setMyGoals(g.data);
+    } catch {}
+  };
 
   const loadMyAttendance = async () => {
     try {
@@ -348,6 +373,9 @@ export default function UserDashboard() {
             { id: "attendance", label: "Attendance", icon: <Calendar size={14} /> },
             { id: "leaves", label: "Leaves", icon: <AlertCircle size={15} /> },
             { id: "timesheets", label: "Timesheets", icon: <Clock size={15} /> },
+            { id: "assets", label: "Assets", icon: <MonitorSmartphone size={15} /> },
+            { id: "expenses", label: "Expenses", icon: <CreditCard size={15} /> },
+            { id: "performance", label: "Goals", icon: <Target size={15} /> },
             { id: "payslips", label: "My Documents", icon: <FileText size={15} /> },
             { id: "profile", label: "My Profile", icon: <User size={15} /> },
           ].map(t => (
@@ -776,10 +804,18 @@ export default function UserDashboard() {
           </div>
         )}
 
-        {/* ── TIMESHEETS TAB ── */}
         {tab === "timesheets" && (
           <TimesheetManager timesheets={timesheets} onRefresh={loadMyTimesheets} />
         )}
+
+        {/* ── ASSETS TAB ── */}
+        {tab === "assets" && <MyAssets assets={myAssets} />}
+
+        {/* ── EXPENSES TAB ── */}
+        {tab === "expenses" && employee && <MyExpenses expenses={myExpenses} employeeId={employee.id} onRefresh={loadMyData} />}
+
+        {/* ── GOALS TAB ── */}
+        {tab === "performance" && <MyGoals goals={myGoals} onRefresh={loadMyData} />}
       </div>
     </div>
   );

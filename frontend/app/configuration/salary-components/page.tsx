@@ -286,7 +286,7 @@ function SalarySummaryView({ salary, basicRows, setBasicRows, gratuityRows, setG
       <NoteBox>
         <ol className="list-decimal list-inside space-y-1">
           <li>HRA will auto-calculate based on the candidate&apos;s work location and can be reviewed on the offer letter edit page.</li>
-          <li>EPF and ESI values in Offrd are regulatory compliant, so we don&apos;t recommend editing them. However, you can adjust EPF in the salary components section in the left menu.</li>
+          <li>EPF and ESI values in DefenseBlu are regulatory compliant, so we don&apos;t recommend editing them. However, you can adjust EPF in the salary components section in the left menu.</li>
           <li>Special Allowance is calculated as the difference between CTC and the total salary components and benefits. It will be automatically added to the salary structure.</li>
         </ol>
       </NoteBox>

@@ -383,7 +383,7 @@ export default function LoginPage() {
               )}
               
               <div className="mt-8 text-center">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Copyright © Offrd Inc.</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Copyright © DefenseBlu Inc.</p>
               </div>
             </>
           )}

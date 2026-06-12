@@ -57,6 +57,9 @@ import companyRouter from "./routes/company.js";
 import dashboardRouter from "./routes/dashboard.js";
 import uploadRouter from "./routes/upload.js";
 import timesheetsRouter from "./routes/timesheets.js";
+import assetsRouter from "./routes/assets.js";
+import expensesRouter from "./routes/expenses.js";
+import performanceRouter from "./routes/performance.js";
 
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeesRouter);
@@ -72,6 +75,9 @@ app.use("/api/company", companyRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/timesheets", timesheetsRouter);
+app.use("/api/assets", assetsRouter);
+app.use("/api/expenses", expensesRouter);
+app.use("/api/performance", performanceRouter);
 
 app.get("/api/health", (req, res) =>
   res.json({ status: "ok", app: "DefenseBlu HRMS", time: new Date() })

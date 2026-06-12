@@ -380,7 +380,7 @@ export default function UserDashboard() {
             { id: "profile", label: "My Profile", icon: <User size={15} /> },
           ].map(t => (
             <button key={t.id} onClick={() => setTab(t.id as Tab)}
-              className={clsx("flex-1 flex flex-col sm:flex-row items-center justify-center gap-1 py-2 rounded-xl text-[10px] sm:text-sm font-bold transition-all",
+              className={clsx("flex-none sm:flex-1 w-[72px] sm:w-auto flex flex-col sm:flex-row items-center justify-center gap-1 py-2 rounded-xl text-[10px] sm:text-sm font-bold transition-all shrink-0",
                 tab === t.id ? "bg-navy text-white shadow-sm" : "text-slate-500 hover:text-navy hover:bg-slate-50"
               )}>
               {t.icon} <span className="hidden sm:inline">{t.label}</span><span className="sm:hidden text-[9px] leading-tight text-center">{t.label}</span>

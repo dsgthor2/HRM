@@ -173,7 +173,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   return (
     <aside className={clsx(
-      "fixed left-0 top-0 h-screen w-56 bg-white border-r border-cream-dark flex flex-col z-50 shadow-sm transition-transform duration-300 ease-in-out md:translate-x-0",
+      "fixed left-0 top-0 h-[100dvh] w-4/5 sm:w-64 md:w-56 bg-white border-r border-cream-dark flex flex-col z-50 shadow-xl md:shadow-sm transition-transform duration-300 ease-in-out md:translate-x-0",
       isOpen ? "translate-x-0" : "-translate-x-full"
     )}>
       {/* Mobile Close Button */}

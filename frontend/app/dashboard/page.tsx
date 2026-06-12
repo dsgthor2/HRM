@@ -252,56 +252,58 @@ export default function Dashboard() {
 
         {/* ROW 2: Employee List (Full Width Now) */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="p-6 border-b border-slate-200">
-                <div className="flex items-center justify-between mb-6">
+              <div className="p-4 md:p-6 border-b border-slate-200">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                       <Users size={20} />
                     </div>
                     <div>
                       <h2 className="text-lg font-black text-slate-800">Employee list</h2>
-                      <p className="text-xs text-slate-500">All employees and candidates in one list</p>
+                      <p className="text-xs text-slate-500 hidden md:block">All employees and candidates in one list</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                  <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                    <button onClick={handleExport} className="flex-1 md:flex-none items-center justify-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all flex">
                       <LogOut size={14} className="-rotate-90" /> Export
                     </button>
-                    <Link href="/hrm/employees" className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                    <Link href="/hrm/employees" className="hidden md:flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
                       <FileText size={14} /> View detailed list
                     </Link>
-                    <Link href="/hrm/employees" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-sm">
-                      <UserPlus size={14} /> Add New Employee
+                    <Link href="/hrm/employees" className="flex-1 md:flex-none flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-sm">
+                      <UserPlus size={14} /> Add New
                     </Link>
                   </div>
                 </div>
 
-                <div className="flex border-b border-slate-200 mb-5 relative top-px">
+                <div className="flex overflow-x-auto border-b border-slate-200 mb-4 md:mb-5 relative top-px hide-scrollbar">
                   {[
                     { id: "All", count: unifiedList.length },
                     { id: "Candidates", count: unifiedList.filter(i => i.type === "Candidate").length },
                     { id: "Employees", count: unifiedList.filter(i => i.type === "Employee").length }
                   ].map(t => (
-                    <button key={t.id} onClick={() => handleTabChange(t.id as any)} className={clsx("px-6 py-3 font-bold text-sm tracking-wide gap-2 flex items-center transition-all border-b-2", activeTab === t.id ? "border-blue-600 text-slate-800" : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300")}>
+                    <button key={t.id} onClick={() => handleTabChange(t.id as any)} className={clsx("px-4 md:px-6 py-3 font-bold text-sm tracking-wide gap-2 flex items-center transition-all border-b-2 whitespace-nowrap", activeTab === t.id ? "border-blue-600 text-slate-800" : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300")}>
                       {t.id} <span className={clsx("px-2 py-0.5 rounded-full text-[10px]", activeTab === t.id ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500")}>{t.count}</span>
                     </button>
                   ))}
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                   <div className="relative flex-1">
                     <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" placeholder="Search by Name or Designation" value={search} onChange={e => setSearch(e.target.value)} />
+                    <input className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" placeholder="Search by Name or Designation" value={search} onChange={e => setSearch(e.target.value)} />
                   </div>
-                  <select className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
-                    <option value="">All Departments</option>
-                    {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
-                  </select>
-                  <select className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={desigFilter} onChange={e => setDesigFilter(e.target.value)}>
-                    <option value="">All Designations</option>
-                    {designations.map(d => <option key={d.id} value={d.title}>{d.title}</option>)}
-                  </select>
-                  <select className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm min-w-[120px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none">
+                  <div className="flex gap-3">
+                    <select className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
+                      <option value="">All Departments</option>
+                      {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                    </select>
+                    <select className="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 text-[16px] md:text-sm md:min-w-[160px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none" value={desigFilter} onChange={e => setDesigFilter(e.target.value)}>
+                      <option value="">All Designations</option>
+                      {designations.map(d => <option key={d.id} value={d.title}>{d.title}</option>)}
+                    </select>
+                  </div>
+                  <select className="hidden md:block px-4 py-2.5 rounded-lg border border-slate-200 text-sm min-w-[120px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none">
                     <option>Sort By</option>
                     <option>Name A-Z</option>
                     <option>Recent</option>

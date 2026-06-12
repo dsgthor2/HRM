@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import BottomNav from "./BottomNav";
 import { Menu, X } from "lucide-react";
 
 interface Props {
@@ -34,8 +35,8 @@ export default function AppShell({ children, title }: Props) {
   if (!mounted) return null;
 
   return (
-    <div className="flex min-h-screen bg-cream">
-      {/* Mobile Sidebar Overlay */}
+    <div className="flex min-h-[100dvh] bg-cream overflow-hidden">
+      {/* Mobile Sidebar Overlay (now acts as a full-screen menu from the BottomNav) */}
       {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
@@ -45,22 +46,18 @@ export default function AppShell({ children, title }: Props) {
 
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className="md:ml-56 flex-1 flex flex-col min-h-screen min-w-0 transition-all">
-        {/* Mobile Header */}
-        <div className="md:hidden bg-white border-b border-cream-dark p-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-          <div className="font-black text-navy text-lg tracking-tight">DefenseBlu</div>
-          <button 
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 -mr-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-          >
-            <Menu size={24} />
-          </button>
-        </div>
-
+      <div className="md:ml-56 flex-1 flex flex-col h-[100dvh] min-w-0 transition-all overflow-hidden relative">
         <div className="hidden md:block">
           <Navbar title={title} />
         </div>
-        <main className="flex-1 p-4 md:p-6 fade-in">{children}</main>
+        
+        {/* Main scrollable area */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 md:pb-6 fade-in custom-scrollbar">
+          {children}
+        </main>
+        
+        {/* Bottom Navigation for Mobile */}
+        <BottomNav onOpenMenu={() => setSidebarOpen(true)} />
       </div>
     </div>
   );

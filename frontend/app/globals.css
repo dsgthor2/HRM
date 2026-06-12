@@ -19,12 +19,21 @@ body {
   color: var(--navy);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  
+  /* Native App Behaviors */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none; /* Prevent text selection like a real app */
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c8c0b0; border-radius: 99px; }
+/* Allow text selection in inputs and textareas */
+input, textarea, select {
+  user-select: auto;
+}
+
+/* Scrollbar (Hide globally for cleaner native feel, but keep scrollable) */
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Sidebar link */
 .sidebar-link {
@@ -69,7 +78,7 @@ body {
 .badge-navy   { @apply bg-navy/10 text-navy; }
 
 /* Table */
-.table-wrap { @apply card p-0 overflow-hidden; }
+.table-wrap { @apply card p-0 overflow-x-auto overflow-y-hidden; }
 .table-head { @apply bg-cream; }
 .th { @apply text-xs font-semibold text-slate-400 uppercase tracking-wide px-4 py-3 text-left whitespace-nowrap; }
 .td { @apply px-4 py-3 text-sm text-navy; }

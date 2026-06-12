@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 
 async function ensureAdmins() {
   const admins = [
-    { name: 'Harish M', email: 'harish.m@fingrow.in', password: 'Password@123' },
-    { name: 'Lokesh V', email: 'lokesh.vasuz@fingrow.in', password: 'Password@123' },
-    { name: 'Admin', email: 'admin@fingrow.in', password: 'Fingrow@2026' },
+    { name: 'Harish M', email: 'harish.m@defenseblu.com', password: 'Password@123' },
+    { name: 'Lokesh V', email: 'hr@defenseblu.com', password: 'Password@123' },
+    { name: 'Admin', email: 'admin@defenseblu.com', password: 'DefenseBlu@2026' },
   ];
   for (const a of admins) {
     const hashed = await bcrypt.hash(a.password, 10);

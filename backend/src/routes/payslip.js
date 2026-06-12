@@ -471,14 +471,14 @@ router.post("/:id/send-email", auth, async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: `"${req.user?.name || "HR Department"} | Fingrow HRMS" <${hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER)}>`,
+      from: `"${req.user?.name || "HR Department"} | DefenseBlu HRMS" <${hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER)}>`,
       replyTo: hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER),
       to: toEmail,
-      subject: `Your Payslip for ${slip.month} ${slip.year} – Fingrow Consulting Services`,
+      subject: `Your Payslip for ${slip.month} ${slip.year} – DefenseBlu`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
           <div style="background:#1e2d4a;padding:24px;border-radius:8px 8px 0 0;">
-            <h2 style="color:#fff;margin:0;font-size:20px;">Fingrow Consulting Services</h2>
+            <h2 style="color:#fff;margin:0;font-size:20px;">DefenseBlu</h2>
             <p style="color:#94a3b8;margin:4px 0 0;font-size:13px;">HR Management System</p>
           </div>
           <div style="background:#f8fafc;padding:24px;border:1px solid #e2e8f0;">

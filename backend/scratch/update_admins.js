@@ -4,14 +4,14 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 const admins = [
-  { email: "harish.m@fingrow.in", name: "Harish M" },
-  { email: "lokesh.vasu@fingrow.in", name: "Lokesh Vasu" },
-  { email: "admin@fingrow.in", name: "Admin" },
-  { email: "dheelepsai.n@fingrow.in", name: "Dheelepsai N" },
+  { email: "harish.m@defenseblu.com", name: "Harish M" },
+  { email: "hr@defenseblu.com", name: "Lokesh Vasu" },
+  { email: "admin@defenseblu.com", name: "Admin" },
+  { email: "dheelepsai.n@defenseblu.com", name: "Dheelepsai N" },
 ];
 
 async function main() {
-  const password = await bcrypt.hash("fingrow@2026", 10);
+  const password = await bcrypt.hash("defenseblu@2026", 10);
   for (const admin of admins) {
     await prisma.user.upsert({
       where: { email: admin.email },

@@ -14,9 +14,9 @@ async function cleanup() {
     await prisma.company.create({
       data: {
         id: "default-company",
-        name: "Fingrow Consulting services\nprivate limited",
+        name: "DefenseBlu\nPrivate Limited",
         address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
-        email: "hr@fingrow.in",
+        email: "hr@defenseblu.com",
         phone: "+91 00000 00000",
       }
     });
@@ -25,7 +25,7 @@ async function cleanup() {
     console.log("Updating existing company to Tirupati...");
     await prisma.company.updateMany({
       data: {
-        name: "Fingrow Consulting services\nprivate limited",
+        name: "DefenseBlu\nPrivate Limited",
         address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
       }
     });
@@ -34,9 +34,9 @@ async function cleanup() {
     await prisma.company.create({
       data: {
         id: "default-company",
-        name: "Fingrow Consulting services\nprivate limited",
+        name: "DefenseBlu\nPrivate Limited",
         address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
-        email: "hr@fingrow.in",
+        email: "hr@defenseblu.com",
         phone: "+91 00000 00000",
       }
     });

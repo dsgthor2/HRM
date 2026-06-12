@@ -257,7 +257,7 @@ export default function Navbar({ title }: NavbarProps) {
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Work Email</label>
                   <input
                     className="input h-12 text-sm"
-                    placeholder="name@fingrow.in"
+                    placeholder="name@defenseblu.com"
                     value={smtpForm.user}
                     onChange={e => setSmtpForm(f => ({ ...f, user: e.target.value }))}
                     required

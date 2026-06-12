@@ -60,9 +60,9 @@ const HEADER_BOTTOM = 95;
 const CONTENT_WIDTH = PAGE_W - MARGIN * 2;
 
 const DEFAULT_CO = {
-    name: "Fingrow Consulting Services\nPrivate Limited",
+    name: "DefenseBlu\nPrivate Limited",
     address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
-    email: "lokesh.vasu@fingrow.in",
+    email: "hr@defenseblu.com",
 };
 
 function cleanCompanyName(name) {
@@ -734,7 +734,7 @@ function applyReplacements(text, map) {
 
     out = out
         .replace(/(send an email to:)\s*\n\s*/gi, "$1 ")
-        .replace(/hr@fingrow\.in/gi, "lokesh.vasu@fingrow.in");
+        .replace(/hr@defenseblu\.in/gi, "hr@defenseblu.com");
 
     out = boldInr(out);
 
@@ -775,9 +775,9 @@ function boldKeyValues(text, data, company) {
         cleanName,
         desig,
         coName,
-        "Fingrow Consulting services private limited",
-        "Fingrow Consulting Services Private Limited",
-        "Fingrow Consulting Services Pvt Ltd",
+        "DefenseBlu Private Limited",
+        "DefenseBlu Private Limited",
+        "DefenseBlu Private Limited",
     ].filter(v => v && v.length > 2);
 
     out = boldInr(out);
@@ -871,7 +871,7 @@ export async function generateProfessionalLetter(options) {
             const clean = l.replace(/\*/g, "");
             const lower = clean.toLowerCase();
             if (lower.includes("name:") && lower.includes("signature:")) return false;
-            if (lower.startsWith("for ") && (lower.includes("fingrow") || lower.includes("consulting"))) return false;
+            if (lower.startsWith("for ") && (lower.includes("defenseblu") || lower.includes("consulting"))) return false;
             if (lower === "authorized signatory" || lower === "hr manager" || lower === "signature:") return false;
             return true;
         })
@@ -948,7 +948,7 @@ export async function generateProfessionalLetter(options) {
     if (isOffer && !boldedBody.includes("Candidate Undertaking:")) {
         doc.font(F.bold).fontSize(9).fillColor(C.black).text("Candidate Undertaking:", MARGIN, doc.y);
         doc.moveDown(0.2);
-        const compactU = `I have carefully read and understood the terms and conditions mentioned above and in the Annexure I and II attached. I acknowledge that while I am working for **Fingrow Consulting services private limited**, I will take proper care of all company equipment. I understand I may be held financially responsible for lost or damaged property. I accept all terms and conditions and shall commence my employment with effect from ____________`;
+        const compactU = `I have carefully read and understood the terms and conditions mentioned above and in the Annexure I and II attached. I acknowledge that while I am working for **DefenseBlu Private Limited**, I will take proper care of all company equipment. I understand I may be held financially responsible for lost or damaged property. I accept all terms and conditions and shall commence my employment with effect from ____________`;
         renderTextBlocks(doc, compactU, { fontSize: 8.4, lineGap: 1.1, align: "justify" });
     }
 
@@ -1042,7 +1042,7 @@ function buildReplacements(data, company, today) {
         DESIGNATION: `**${designationTitled}**`,
         DEPARTMENT: safe2(d.department || "________"),
         COMPANY_NAME: `**${cleanCoName}**`, "COMPANY NAME": `**${cleanCoName}**`,
-        COMPANY_EMAIL: "lokesh.vasu@fingrow.in", "COMPANY EMAIL": "lokesh.vasu@fingrow.in",
+        COMPANY_EMAIL: "hr@defenseblu.com", "COMPANY EMAIL": "hr@defenseblu.com",
         DATE: today,
         OFFER_DATE: formatDate(d.offerDate || d.date || todayRaw) || today,
         VALID_TILL: formatDate(d.offerExpiry || d.validTill || d.validTillOffer) || today,

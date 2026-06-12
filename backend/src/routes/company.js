@@ -22,7 +22,7 @@ router.post("/upload-logo", auth, upload.single("logo"), (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     let company = await prisma.company.findFirst();
-    if (!company) company = await prisma.company.create({ data: { name: "Fingrow Consulting Services Pvt Ltd" } });
+    if (!company) company = await prisma.company.create({ data: { name: "DefenseBlu Private Limited" } });
     if (company.secondaryEmails && typeof company.secondaryEmails === "string") {
       try { company = { ...company, secondaryEmails: JSON.parse(company.secondaryEmails) }; } catch {}
     }

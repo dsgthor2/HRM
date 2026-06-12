@@ -20,7 +20,7 @@ import {
 function resolveLogoUrl(raw?: string | null): string {
   if (!raw || raw.trim() === "") return "";
   if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://fingrowhrm.info/api";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api";
   const base = apiUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
   const path = raw.startsWith("/") ? raw : `/${raw}`;
   return `${base}${path}`;
@@ -97,7 +97,7 @@ export default function Sidebar() {
 
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [logoLoadError, setLogoLoadError] = useState(false);
-  const [companyName, setCompanyName] = useState<string>("Fingrow");
+  const [companyName, setCompanyName] = useState<string>("DefenseBlu");
 
   const applyCompanyData = (data: any) => {
     if (!data) return;
@@ -183,7 +183,7 @@ export default function Sidebar() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-base font-black text-navy leading-tight tracking-tight truncate">
-                  {companyName.split(" ")[0] || "Fingrow"}
+                  {companyName.split(" ")[0] || "DefenseBlu"}
                 </div>
                 <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider truncate leading-tight mt-0.5">
                   {companyName.split(" ").slice(1).join(" ") || "HRMS Portal"}
@@ -199,7 +199,7 @@ export default function Sidebar() {
               </div>
               <div className="min-w-0">
                 <div className="text-base font-black text-navy leading-tight tracking-tight truncate">
-                  {companyName.split(" ")[0] || "Fingrow"}
+                  {companyName.split(" ")[0] || "DefenseBlu"}
                 </div>
                 <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider truncate leading-tight mt-0.5">
                   HRMS Portal

@@ -16,37 +16,37 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   const admin = await prisma.user.upsert({
-    where: { email: "admin@fingrow.in" },
+    where: { email: "admin@defenseblu.com" },
     update: {},
     create: {
       name: "Admin User",
-      email: "admin@fingrow.in",
-      password: await bcrypt.hash("Fingrow@2026", 10),
+      email: "admin@defenseblu.com",
+      password: await bcrypt.hash("DefenseBlu@2026", 10),
       role: "ADMIN",
     },
   });
-  console.log("✅ Admin:", admin.email, "| Password: Fingrow@2026");
+  console.log("✅ Admin:", admin.email, "| Password: DefenseBlu@2026");
 
   await prisma.user.upsert({
-    where: { email: "hr@fingrow.in" },
+    where: { email: "hr@defenseblu.com" },
     update: {},
     create: {
       name: "HR Manager",
-      email: "hr@fingrow.in",
+      email: "hr@defenseblu.com",
       password: await bcrypt.hash("HR@2026", 10),
       role: "HR",
     },
   });
-  console.log("✅ HR:", "hr@fingrow.in", "| Password: HR@2026");
+  console.log("✅ HR:", "hr@defenseblu.com", "| Password: HR@2026");
 
   await prisma.company.upsert({
     where: { id: "default-company" },
     update: {},
     create: {
       id: "default-company",
-      name: "Fingrow Consulting services\nprivate limited",
+      name: "DefenseBlu\nPrivate Limited",
       address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
-      email: "hr@fingrow.in",
+      email: "hr@defenseblu.com",
       phone: "+91 00000 00000",
       logoUrl: "/uploads/logo.png",
     },
@@ -79,8 +79,8 @@ async function main() {
 
   console.log("\n🎉 Seeding complete!");
   console.log("─────────────────────────────────");
-  console.log("Admin Login: admin@fingrow.in / Fingrow@2026");
-  console.log("HR Login:    hr@fingrow.in / HR@2026");
+  console.log("Admin Login: admin@defenseblu.com / DefenseBlu@2026");
+  console.log("HR Login:    hr@defenseblu.com / HR@2026");
   console.log("─────────────────────────────────\n");
 }
 

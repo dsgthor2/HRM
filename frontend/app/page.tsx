@@ -44,11 +44,11 @@ function Navbar() {
         <Link href="/" className="flex items-center gap-3">
           <Logo />
           <div className="hidden sm:block">
-            <div className="text-xl font-black text-navy leading-none">Fingrow</div>
+            <div className="text-xl font-black text-navy leading-none">DefenseBlu</div>
             <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Consulting Services Pvt Ltd</div>
           </div>
           <span className="text-xl font-black text-navy tracking-tight sm:hidden">
-            Fingrow
+            DefenseBlu
           </span>
         </Link>
 
@@ -94,7 +94,7 @@ function Hero() {
             Comprehensive <span className="text-blue-600">Business Solutions</span> for Your Growth.
           </h1>
           <p className="text-lg text-slate-500 leading-relaxed max-w-lg">
-            Fingrow Consulting Services provides specialized staffing, accounting, and payroll management solutions. Our advanced HRMS platfrom streamlines your entire employee lifecycle with precision.
+            DefenseBlu provides specialized staffing, accounting, and payroll management solutions. Our advanced HRMS platfrom streamlines your entire employee lifecycle with precision.
           </p>
           <div className="flex items-center gap-6 pt-4">
              <div className="flex items-center gap-2">
@@ -115,7 +115,7 @@ function Hero() {
         <div className="relative">
           <img 
             src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1000" 
-            alt="Fingrow Workspace" 
+            alt="DefenseBlu Workspace" 
             className="rounded-3xl shadow-xl border border-slate-200"
           />
         </div>
@@ -133,7 +133,7 @@ function About() {
             <h2 className="text-4xl font-black text-navy uppercase tracking-tight">Overview</h2>
             <div className="h-1.5 w-20 bg-blue-600 rounded-full mx-auto" />
             <p className="text-slate-500 text-lg leading-relaxed text-center">
-              Fingrow Consulting Services Private Limited is a professionally managed Information Technology and Human Resource solutions firm dedicated to delivering excellence across every dimension of its service offerings. As an accredited Microsoft Certified Partner, the company is committed to providing comprehensive, end-to-end technology solutions — encompassing Cloud Enablement, Enterprise Resource Planning (ERP) Implementation, Custom Software Development, IT Staff Augmentation, and Business Intelligence services — empowering organisations across diverse sectors to achieve seamless digital transformation. Underpinned by a mission to bridge the gap between innovative technology and skilled human capital, Fingrow is equally dedicated to creating meaningful employment pathways by connecting qualified professionals with opportunities that align with their aspirations and expertise. The company's vision is to emerge as the foremost trusted IT consulting and talent solutions partner in South India — an organisation distinguished by its unwavering commitment to excellence, ethical conduct, and client-centric value delivery. At Fingrow, every engagement is governed by four enduring principles: integrity, excellence, innovation, and a people-first philosophy — values that shape not only the solutions delivered but also the relationships built. With a proven track record of serving clients across IT & ITES, manufacturing, healthcare, education, and government verticals, Fingrow Consulting Services stands as a strategic partner of choice for organisations seeking sustainable growth and for professionals pursuing purposeful careers. At Fingrow, your growth is not just our goal — it is our commitment.
+              DefenseBlu Private Limited is a professionally managed Information Technology and Human Resource solutions firm dedicated to delivering excellence across every dimension of its service offerings. As an accredited Microsoft Certified Partner, the company is committed to providing comprehensive, end-to-end technology solutions — encompassing Cloud Enablement, Enterprise Resource Planning (ERP) Implementation, Custom Software Development, IT Staff Augmentation, and Business Intelligence services — empowering organisations across diverse sectors to achieve seamless digital transformation. Underpinned by a mission to bridge the gap between innovative technology and skilled human capital, DefenseBlu is equally dedicated to creating meaningful employment pathways by connecting qualified professionals with opportunities that align with their aspirations and expertise. The company's vision is to emerge as the foremost trusted IT consulting and talent solutions partner in South India — an organisation distinguished by its unwavering commitment to excellence, ethical conduct, and client-centric value delivery. At DefenseBlu, every engagement is governed by four enduring principles: integrity, excellence, innovation, and a people-first philosophy — values that shape not only the solutions delivered but also the relationships built. With a proven track record of serving clients across IT & ITES, manufacturing, healthcare, education, and government verticals, DefenseBlu stands as a strategic partner of choice for organisations seeking sustainable growth and for professionals pursuing purposeful careers. At DefenseBlu, your growth is not just our goal — it is our commitment.
             </p>
           </div>
           
@@ -159,8 +159,8 @@ function About() {
               <div>
                 <div className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Connect with Us</div>
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-md font-bold text-slate-700">contact@fingrow.in</span>
-                  <span className="text-md font-bold text-slate-700">harish.m@fingrow.in</span>
+                  <span className="text-md font-bold text-slate-700">contact@defenseblu.com</span>
+                  <span className="text-md font-bold text-slate-700">harish.m@defenseblu.com</span>
                 </div>
               </div>
             </div>
@@ -217,12 +217,12 @@ function Footer() {
         <div className="flex items-center gap-3">
            <Logo className="w-9 h-9" />
            <div className="text-left">
-             <div className="text-lg font-black text-navy leading-none">Fingrow</div>
+             <div className="text-lg font-black text-navy leading-none">DefenseBlu</div>
              <div className="text-[7px] font-black text-slate-400 uppercase tracking-widest mt-1">Consulting Services Pvt Ltd</div>
            </div>
         </div>
         <p className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">
-          © 2026 Fingrow Consulting Services Pvt Ltd. All rights reserved.
+          © 2026 DefenseBlu Private Limited. All rights reserved.
         </p>
         <div className="flex gap-6 text-[10px] font-black text-navy uppercase tracking-widest">
            <Link href="#" className="hover:text-blue-600">Privacy</Link>

@@ -18,7 +18,7 @@ const POLICY_SECTIONS = [
     icon: <AlarmClock size={20} />,
     color: "blue",
     desc: "Annual, sick, casual and emergency leave entitlements",
-    content: `LEAVE POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `LEAVE POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -70,7 +70,7 @@ This policy is subject to applicable Indian labour laws including the Shops and 
     icon: <DollarSign size={20} />,
     color: "emerald",
     desc: "Salary structure, payment schedule and deductions",
-    content: `WAGES AND PAYMENT POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `WAGES AND PAYMENT POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -128,7 +128,7 @@ This policy complies with the Payment of Wages Act 1936, Minimum Wages Act 1948,
     icon: <Heart size={20} />,
     color: "pink",
     desc: "Maternity benefits, leave and support provisions",
-    content: `MATERNITY POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `MATERNITY POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -186,7 +186,7 @@ This policy is aligned with the Maternity Benefit (Amendment) Act, 2017.`,
     icon: <Clock size={20} />,
     color: "violet",
     desc: "Standard hours, shifts and overtime guidelines",
-    content: `WORKING HOURS POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `WORKING HOURS POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -240,13 +240,13 @@ This policy complies with the Shops and Establishments Act (Karnataka) and appli
     icon: <Handshake size={20} />,
     color: "amber",
     desc: "Gratuity eligibility, calculation and payment",
-    content: `GRATUITY POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `GRATUITY POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. ELIGIBILITY
-   • Minimum 5 continuous years of service with Fingrow
+   • Minimum 5 continuous years of service with DefenseBlu
    • Applicable on: resignation, retirement, death, disablement due to accident/illness
    • In case of death or disablement: payable regardless of tenure
 
@@ -294,7 +294,7 @@ This policy is governed by the Payment of Gratuity Act, 1972 and amendments ther
     icon: <AlertTriangle size={20} />,
     color: "red",
     desc: "Complaint escalation and resolution process",
-    content: `GRIEVANCE REDRESSAL POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `GRIEVANCE REDRESSAL POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -303,7 +303,7 @@ Effective Date: April 1, 2024 | Version: 1.0
    To provide a fair, transparent, and timely mechanism for employees to raise workplace concerns, disputes, or dissatisfaction related to employment conditions, conduct, or management decisions.
 
 2. SCOPE
-   Applicable to all employees (permanent, contractual, probationary) across all Fingrow office locations.
+   Applicable to all employees (permanent, contractual, probationary) across all DefenseBlu office locations.
 
 3. TYPES OF GRIEVANCES
    • Salary/compensation disputes
@@ -361,13 +361,13 @@ This policy is compliant with the Industrial Disputes Act, 1947 and POSH Act, 20
     icon: <Home size={20} />,
     color: "teal",
     desc: "Work-from-home eligibility and guidelines",
-    content: `REMOTE WORK / HYBRID POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `REMOTE WORK / HYBRID POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. POLICY STATEMENT
-   Fingrow supports flexible work arrangements that maintain productivity, collaboration, and professional standards while supporting employee work-life balance.
+   DefenseBlu supports flexible work arrangements that maintain productivity, collaboration, and professional standards while supporting employee work-life balance.
 
 2. ELIGIBILITY CRITERIA
    • Confirmed employees (post-probation) in eligible roles
@@ -430,7 +430,7 @@ This policy is subject to review every 6 months based on operational needs.`,
     icon: <Scale size={20} />,
     color: "slate",
     desc: "Professional behavior and workplace standards",
-    content: `CODE OF CONDUCT – Fingrow Consulting Services Pvt Ltd
+    content: `CODE OF CONDUCT – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -438,7 +438,7 @@ Effective Date: April 1, 2024 | Version: 1.0
 1. PROFESSIONAL BEHAVIOR
    All employees are expected to:
    • Maintain dignity, respect, and courtesy in all interactions
-   • Represent Fingrow professionally in client-facing situations
+   • Represent DefenseBlu professionally in client-facing situations
    • Dress appropriately (business casual; smart casuals on Fridays)
    • Avoid use of mobile phones during client meetings or presentations
    • Use professional language in written and verbal communication
@@ -459,7 +459,7 @@ Effective Date: April 1, 2024 | Version: 1.0
    • Disclosure required via Conflict of Interest Declaration Form (HR-COI-01)
 
 4. ANTI-HARASSMENT AND ANTI-DISCRIMINATION
-   Fingrow has zero tolerance for:
+   DefenseBlu has zero tolerance for:
    • Sexual harassment (refer to POSH Policy)
    • Bullying, intimidation, or verbal/physical abuse
    • Discrimination based on gender, religion, caste, disability, age, or sexual orientation
@@ -473,7 +473,7 @@ Effective Date: April 1, 2024 | Version: 1.0
 
 6. SOCIAL MEDIA GUIDELINES
    • No posting of confidential company/client information online
-   • Personal opinions that could damage Fingrow's reputation are prohibited
+   • Personal opinions that could damage DefenseBlu's reputation are prohibited
    • Endorsements related to work require prior approval from Marketing/PR
    • Employees must not impersonate the company or its leadership
 
@@ -499,13 +499,13 @@ This policy is subject to review annually and is binding on all employees.`,
     icon: <Copyright size={20} />,
     color: "purple",
     desc: "IP ownership and confidentiality terms",
-    content: `INTELLECTUAL PROPERTY POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `INTELLECTUAL PROPERTY POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. OWNERSHIP OF INTELLECTUAL PROPERTY
-   All Intellectual Property (IP) created by an employee during their employment, using company resources, or related to the company's business belongs exclusively to Fingrow Consulting Services Pvt Ltd. This includes:
+   All Intellectual Property (IP) created by an employee during their employment, using company resources, or related to the company's business belongs exclusively to DefenseBlu Private Limited. This includes:
    • Software, code, algorithms, and databases
    • Business models, frameworks, methodologies
    • Reports, presentations, proposals, client deliverables
@@ -513,13 +513,13 @@ Effective Date: April 1, 2024 | Version: 1.0
    • Marketing materials and brand assets
 
 2. ASSIGNMENT OF IP
-   • Employees assign all IP rights created during employment to Fingrow at the time of creation
+   • Employees assign all IP rights created during employment to DefenseBlu at the time of creation
    • This assignment is automatic and requires no separate documentation
    • Employees must promptly disclose any IP created to their manager and HR
    • Employees must execute any documents required to perfect ownership rights
 
 3. PRE-EXISTING IP
-   • Employees retain ownership of IP created before joining Fingrow
+   • Employees retain ownership of IP created before joining DefenseBlu
    • Pre-existing IP must be disclosed in writing at time of joining (Form HR-IP-01)
    • Use of pre-existing IP in company work requires written consent from both parties
 
@@ -564,7 +564,7 @@ Effective Date: April 1, 2024 | Version: 1.0
      - Indian Contract Act, 1872
 
 8. REPORTING IP CONCERNS
-   Report suspected IP violations to: legal@fingrow.in or HR
+   Report suspected IP violations to: legal@defenseblu.com or HR
    All reports treated confidentially; no retaliation for good-faith reports.
 
 This policy is legally binding and forms part of the employment contract.`,
@@ -575,13 +575,13 @@ This policy is legally binding and forms part of the employment contract.`,
     icon: <Activity size={20} />,
     color: "green",
     desc: "Workplace safety standards and procedures",
-    content: `HEALTH & SAFETY POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `HEALTH & SAFETY POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. POLICY STATEMENT
-   Fingrow is committed to providing a safe, healthy, and hazard-free work environment for all employees, contractors, and visitors. The company complies with all applicable health and safety legislation and strives to exceed minimum legal requirements.
+   DefenseBlu is committed to providing a safe, healthy, and hazard-free work environment for all employees, contractors, and visitors. The company complies with all applicable health and safety legislation and strives to exceed minimum legal requirements.
 
 2. MANAGEMENT RESPONSIBILITIES
    • Provide adequate resources for health and safety programs
@@ -655,18 +655,18 @@ This policy is governed by the Occupational Safety, Health and Working Condition
     icon: <ShieldCheck size={20} />,
     color: "orange",
     desc: "Anti-corruption and ethical conduct standards",
-    content: `ANTI-BRIBERY AND ANTI-CORRUPTION POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `ANTI-BRIBERY AND ANTI-CORRUPTION POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. POLICY STATEMENT
-   Fingrow Consulting Services Pvt Ltd is committed to conducting all business activities with integrity, honesty, and in full compliance with applicable anti-corruption laws. Bribery and corruption are illegal and unethical, and will not be tolerated in any form.
+   DefenseBlu Private Limited is committed to conducting all business activities with integrity, honesty, and in full compliance with applicable anti-corruption laws. Bribery and corruption are illegal and unethical, and will not be tolerated in any form.
 
 2. SCOPE
    This policy applies to:
    • All employees, directors, officers, and partners
-   • Contractors, consultants, and third-party agents acting on Fingrow's behalf
+   • Contractors, consultants, and third-party agents acting on DefenseBlu's behalf
    • All business activities in India and internationally
 
 3. DEFINITIONS
@@ -679,7 +679,7 @@ Effective Date: April 1, 2024 | Version: 1.0
    • Offering or paying bribes to government officials or private individuals
    • Accepting bribes or kickbacks from vendors, clients, or any third party
    • Making or receiving facilitation payments
-   • Causing another person to commit bribery on behalf of Fingrow
+   • Causing another person to commit bribery on behalf of DefenseBlu
    • Approving purchases or contracts in exchange for personal benefit
    • Falsifying records to conceal improper payments
 
@@ -715,7 +715,7 @@ Effective Date: April 1, 2024 | Version: 1.0
 
 9. REPORTING VIOLATIONS (WHISTLE-BLOWER PROTECTION)
    Report concerns to:
-   • Compliance Officer: compliance@fingrow.in
+   • Compliance Officer: compliance@defenseblu.com
    • Anonymous hotline: [number/web portal]
    • Directly to MD if senior management is involved
 
@@ -740,7 +740,7 @@ This policy is reviewed annually by HR, Finance, and Legal.`,
     icon: <BookOpen size={20} />,
     color: "cyan",
     desc: "Attendance tracking, punctuality and absence rules",
-    content: `ATTENDANCE POLICY – Fingrow Consulting Services Pvt Ltd
+    content: `ATTENDANCE POLICY – DefenseBlu Private Limited
 Effective Date: April 1, 2024 | Version: 1.0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

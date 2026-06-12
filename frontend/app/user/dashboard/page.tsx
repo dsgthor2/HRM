@@ -266,7 +266,7 @@ export default function UserDashboard() {
               <span className="text-white text-lg font-black">F</span>
             </div>
             <div>
-              <div className="font-black text-navy text-sm leading-tight">Fingrow HRMS</div>
+              <div className="font-black text-navy text-sm leading-tight">DefenseBlu HRMS</div>
               <div className="text-[10px] text-slate-400 uppercase tracking-widest">Employee Portal</div>
             </div>
           </Link>
@@ -612,7 +612,7 @@ export default function UserDashboard() {
                       </div>
                       {l.pdfUrl && (
                         <button onClick={() => {
-                          const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://fingrowhrm.info/api").replace("/api", "");
+                          const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
                           window.open(`${baseUrl}${l.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
                         }} className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
                           <Download size={18} />
@@ -645,7 +645,7 @@ export default function UserDashboard() {
                         </div>
                         {p.pdfUrl && (
                           <button onClick={() => {
-                            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://fingrowhrm.info/api").replace("/api", "");
+                            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
                             window.open(`${baseUrl}${p.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
                           }}
                             className="bg-blue-50 text-blue-600 border border-blue-100 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5">

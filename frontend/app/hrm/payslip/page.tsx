@@ -68,7 +68,7 @@ function StandardPreview() {
     <div className="border border-slate-200 rounded-lg overflow-hidden text-[7px] bg-white scale-100 shadow-sm">
       <div className="bg-[#1e2d4a] text-white px-3 py-1.5 text-center">
         <div className="font-bold text-[8px]">PAYSLIP</div>
-        <div className="text-[6px] text-slate-300">Fingrow Consulting Services Pvt Ltd</div>
+        <div className="text-[6px] text-slate-300">DefenseBlu Private Limited</div>
       </div>
       <div className="p-2">
         <div className="grid grid-cols-2 gap-1 mb-2">
@@ -98,7 +98,7 @@ function ClassicPreview() {
       <div className="flex justify-between items-center px-3 py-1.5 border-b border-slate-200">
         <div>
           <div className="font-bold text-[7px] text-[#1e2d4a]">PAYSLIP</div>
-          <div className="text-[5.5px] text-slate-400">Fingrow Consulting Services</div>
+          <div className="text-[5.5px] text-slate-400">DefenseBlu</div>
         </div>
         <div className="w-5 h-5 rounded-full bg-[#1e2d4a] flex items-center justify-center text-white text-[6px] font-bold">F</div>
       </div>
@@ -337,7 +337,7 @@ export default function PayslipPage() {
     try {
       const r = await api.get("/company");
       setCompanyData(r.data);
-      if (r.data.logoUrl) setLogoPreview(`https://fingrowhrm.info${r.data.logoUrl}`);
+      if (r.data.logoUrl) setLogoPreview(`https://defensebluhrm.info${r.data.logoUrl}`);
     } catch { }
     setShowSettings(true);
   };
@@ -610,7 +610,7 @@ export default function PayslipPage() {
                         <button className="btn-sm bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 gap-1" onClick={() => setPreviewSlip(p)}>
                           <Eye size={12} /> Preview
                         </button>
-                        <a href={`https://fingrowhrm.info${p.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
+                        <a href={`https://defensebluhrm.info${p.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
                           className="btn-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 gap-1">
                           <Download size={12} /> PDF
                         </a>
@@ -1260,7 +1260,7 @@ export default function PayslipPage() {
             </div>
             <div className="flex gap-3 px-6 pb-6">
               {previewSlip.pdfUrl && (
-                <a href={`https://fingrowhrm.info${previewSlip.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
+                <a href={`https://defensebluhrm.info${previewSlip.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
                   className="btn-primary flex-1 gap-2 text-center justify-center">
                   <Download size={15} /> Download PDF
                 </a>
@@ -1326,7 +1326,7 @@ export default function PayslipPage() {
               {emailSlip.pdfUrl && (
                 <button 
                   onClick={() => {
-                    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://fingrowhrm.info/api").replace("/api", "");
+                    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
                     window.open(`${baseUrl}${emailSlip.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
                   }}
                   className="btn-ghost flex-1 gap-2 border border-slate-200">

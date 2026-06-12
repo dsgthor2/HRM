@@ -432,30 +432,30 @@ router.post("/:id/send-email", async (req, res) => {
 
     await sendEmail({
       to: recipientEmail,
-      from: `"${req.user?.name || "HR Department"} | Fingrow HRMS" <${hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER)}>`,
+      from: `"${req.user?.name || "HR Department"} | DefenseBlu HRMS" <${hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER)}>`,
       replyTo: hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER),
       auth: hasPersonalSmtp ? { user: admin.smtpUser, pass: admin.smtpPass } : null,
       subject: `Official Document: ${letter.type} Letter – ${recipientName}`,
       html: `
         <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
           <div style="background: #1e2d4a; padding: 20px 28px; border-radius: 8px; margin-bottom: 24px;">
-            <h2 style="color: #fff; margin: 0; font-size: 18px;">Fingrow Consulting Services</h2>
+            <h2 style="color: #fff; margin: 0; font-size: 18px;">DefenseBlu</h2>
             <p style="color: #94a3b8; margin: 4px 0 0; font-size: 13px;">Human Resources Department</p>
           </div>
           <p style="font-size: 15px; color: #1a1a1a;">Dear <strong>${recipientName}</strong>,</p>
           <p style="font-size: 14px; color: #374151; line-height: 1.6;">
-            Please find attached your official <strong>${letter.type} Letter</strong> from Fingrow Consulting Services Private Limited.
+            Please find attached your official <strong>${letter.type} Letter</strong> from DefenseBlu Private Limited.
           </p>
           <p style="font-size: 14px; color: #374151;">
             If you have any questions, please reach out to our HR team at
-            <a href="mailto:lokesh.vasu@fingrow.in" style="color: #2563eb;">lokesh.vasu@fingrow.in</a>.
+            <a href="mailto:hr@defenseblu.com" style="color: #2563eb;">hr@defenseblu.com</a>.
           </p>
           <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
             <p style="font-size: 13px; color: #64748b; margin: 0;">Warm regards,</p>
             <p style="font-size: 14px; font-weight: bold; color: #1e2d4a; margin: 4px 0;">${req.user?.name || "HR Department"}</p>
-            <p style="font-size: 12px; color: #64748b; margin: 0;">Fingrow Consulting Services Pvt Ltd</p>
+            <p style="font-size: 12px; color: #64748b; margin: 0;">DefenseBlu Private Limited</p>
           </div>
-            <p style="font-size: 13px; color: #64748b; margin: 0;">Fingrow Consulting Services Pvt Ltd</p>
+            <p style="font-size: 13px; color: #64748b; margin: 0;">DefenseBlu Private Limited</p>
           </div>
         </div>
       `,

@@ -69,7 +69,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api/timesheets", timesheetsRouter);
 
 app.get("/api/health", (req, res) =>
-  res.json({ status: "ok", app: "Fingrow HRMS", time: new Date() })
+  res.json({ status: "ok", app: "DefenseBlu HRMS", time: new Date() })
 );
 
 app.use((err, req, res, next) => {
@@ -79,7 +79,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Fingrow HRMS running on http://localhost:${PORT}\n`);
+  console.log(`\n🚀 DefenseBlu HRMS running on http://localhost:${PORT}\n`);
 });
 
 server.on("error", (err) => {

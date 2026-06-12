@@ -27,7 +27,7 @@ enum Role {
 
 model Company {
   id            String  @id @default(cuid())
-  name          String  @default("Fingrow Consulting Services Pvt Ltd")
+  name          String  @default("DefenseBlu Private Limited")
   pan           String?
   gstin         String?
   tan           String?

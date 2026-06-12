@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fingrow HRMS",
-  description: "Human Resource Management System – Fingrow Consulting Services Pvt Ltd",
+  title: "DefenseBlu HRMS",
+  description: "Human Resource Management System – DefenseBlu Private Limited",
   icons: { icon: "/favicon.ico" },
 };
 

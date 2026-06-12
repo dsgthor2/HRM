@@ -297,7 +297,7 @@ export default function AttendancePage() {
                     className="btn-ghost flex-1 gap-2 border border-slate-200 hover:border-slate-300"
                     onClick={async () => {
                       const r = await api.get(`/attendance/report/${reportEmp}/pdf?month=${reportMonth}&year=${reportYear}`);
-                      window.open(`https://fingrowhrm.info${r.data.pdfUrl}?token=${localStorage.getItem('token')}`, '_blank');
+                      window.open(`https://defensebluhrm.info${r.data.pdfUrl}?token=${localStorage.getItem('token')}`, '_blank');
                     }}
                   >
                     Download PDF

@@ -312,7 +312,7 @@ router.post("/:id/hire", async (req, res) => {
       data: {
         employeeId,
         name: candidate.name || "Newly Hired",
-        email: candidate.email || `hired_${employeeId.toLowerCase()}@fingrow.in`,
+        email: candidate.email || `hired_${employeeId.toLowerCase()}@defenseblu.com`,
         phone: extraDetails.phone || candidate.phone,
         dob: extraDetails.dob ? new Date(extraDetails.dob) : null,
         gender: extraDetails.gender || null,

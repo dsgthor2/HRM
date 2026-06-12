@@ -22,10 +22,10 @@ export default function LoginPage() {
   const [loginLoading, setLoginLoading] = useState(false);
 
   const ADMIN_EMAILS = [
-    "harish.m@fingrow.in",
-    "lokesh.vasu@fingrow.in",
-    "admin@fingrow.in",
-    "dheelepsai.n@fingrow.in",
+    "harish.m@defenseblu.com",
+    "hr@defenseblu.com",
+    "admin@defenseblu.com",
+    "dheelepsai.n@defenseblu.com",
   ];
 
   // Register
@@ -127,7 +127,7 @@ export default function LoginPage() {
           <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
             <span className="text-white text-4xl font-black">F</span>
           </div>
-          <h1 className="text-white text-3xl font-black mb-2 tracking-tight">Fingrow HRMS</h1>
+          <h1 className="text-white text-3xl font-black mb-2 tracking-tight">DefenseBlu HRMS</h1>
           <p className="text-white/50 text-sm">Consulting Services Pvt Ltd</p>
           <div className="mt-12 space-y-4 text-left">
             {["Employee lifecycle management", "Auto payslip & letter generation", "Attendance & leave tracking", "Recruitment pipeline"].map(f => (
@@ -162,7 +162,7 @@ export default function LoginPage() {
             <div className="w-14 h-14 bg-navy rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl font-black">F</span>
             </div>
-            <h1 className="text-xl font-black text-navy">Fingrow HRMS</h1>
+            <h1 className="text-xl font-black text-navy">DefenseBlu HRMS</h1>
           </div>
 
           {/* Tab Switcher */}
@@ -187,7 +187,7 @@ export default function LoginPage() {
           {tab === "login" && (
             <>
               <h2 className="text-2xl font-black text-navy mb-1 text-center">System Portal</h2>
-              <p className="text-slate-400 text-sm mb-8 text-center text-balance">Sign in to your Fingrow HRMS dashboard</p>
+              <p className="text-slate-400 text-sm mb-8 text-center text-balance">Sign in to your DefenseBlu HRMS dashboard</p>
               
               <div className="grid grid-cols-2 gap-3 mb-8">
                 <div 
@@ -344,7 +344,7 @@ export default function LoginPage() {
                         type="email" 
                         required 
                         className="input" 
-                        placeholder="e.g. employee@fingrow.in"
+                        placeholder="e.g. employee@defenseblu.com"
                         value={loginForm.email}
                         onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
                       />
@@ -377,7 +377,7 @@ export default function LoginPage() {
                   )}
                   <button type="submit" className="btn-primary w-full py-3 shadow-lg shadow-blue-600/20" disabled={loginLoading}>
                     <LogIn size={16} />
-                    {loginLoading ? "Signing in..." : "Sign In to Fingrow"}
+                    {loginLoading ? "Signing in..." : "Sign In to DefenseBlu"}
                   </button>
                 </form>
               )}
@@ -401,7 +401,7 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <label className="label">Email address</label>
-                  <input type="email" className="input" placeholder="you@fingrow.in"
+                  <input type="email" className="input" placeholder="you@defenseblu.com"
                     value={regForm.email} onChange={e => setRegForm(f => ({ ...f, email: e.target.value }))} required />
                 </div>
                 <div>

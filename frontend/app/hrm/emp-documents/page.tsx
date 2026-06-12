@@ -298,7 +298,7 @@ export default function EmpDocumentsHub() {
             </div>
             <div className="flex items-center gap-3">
               <a
-                href={`https://fingrowhrm.info${lastResult.pdfUrl}?token=${localStorage.getItem('token')}`}
+                href={`https://defensebluhrm.info${lastResult.pdfUrl}?token=${localStorage.getItem('token')}`}
                 target="_blank"
                 rel="noreferrer"
                 className="px-6 py-2.5 rounded-xl bg-emerald-500 text-white text-xs font-black uppercase tracking-widest hover:bg-emerald-600 transition-all"

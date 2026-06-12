@@ -208,27 +208,29 @@ export default function Dashboard() {
     <AppShell title="Dashboard">
       <div className="space-y-6">
 
-        {/* ROW 0: Live Status Monitor (Sleek) */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mr-2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Live Status
-          </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="text-[11px] font-bold text-slate-700">{liveStatus.ONLINE || 0} Online</span>
-          </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-            <span className="text-[11px] font-bold text-slate-700">{liveStatus.IN_MEETING || 0} Meeting</span>
-          </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-            <span className="text-[11px] font-bold text-slate-700">{liveStatus.ON_BREAK || 0} Break</span>
-          </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-            <span className="text-[11px] font-bold text-slate-700">{liveStatus.OFFLINE || 0} Offline</span>
+        {/* ROW 0: Live Status Monitor (Ultra-Sleek Bar) */}
+        <div className="flex items-center bg-white border border-slate-200 rounded-xl sm:rounded-full shadow-sm mb-4 px-1 py-1 overflow-x-auto hide-scrollbar w-full">
+          <div className="flex items-center min-w-max gap-1 sm:gap-2">
+            <div className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest px-2 sm:px-3 flex items-center gap-1.5 border-r border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Live
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.ONLINE || 0} Online</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.IN_MEETING || 0} Meeting</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.ON_BREAK || 0} Break</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.OFFLINE || 0} Offline</span>
+            </div>
           </div>
         </div>
 

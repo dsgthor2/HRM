@@ -17,6 +17,7 @@ interface UnifiedPerson {
   designation: string;
   department: string | null;
   status: string;
+  liveStatus?: string;
   avatarInitials: string;
   original: any;
 }
@@ -143,6 +144,7 @@ export default function Dashboard() {
         designation: e.designation || "N/A",
         department: e.department || null,
         status: e.status || "ACTIVE",
+        liveStatus: e.currentStatus || "OFFLINE",
         avatarInitials: (e.name || "?")[0].toUpperCase(),
         original: e
       });
@@ -206,30 +208,27 @@ export default function Dashboard() {
     <AppShell title="Dashboard">
       <div className="space-y-6">
 
-        {/* ROW 0: Live Status Monitor */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[80px] -z-10 opacity-20 translate-x-1/2 -translate-y-1/2" />
-          <h3 className="font-black text-white text-[15px] mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Live Employee Status
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-black text-emerald-400">{liveStatus.ONLINE || 0}</span>
-              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">Online</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-black text-rose-400">{liveStatus.IN_MEETING || 0}</span>
-              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">In Meeting</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-black text-amber-400">{liveStatus.ON_BREAK || 0}</span>
-              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">On Break</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-black text-slate-400">{liveStatus.OFFLINE || 0}</span>
-              <span className="text-[10px] font-bold text-slate-300 uppercase mt-1 tracking-wider">Offline</span>
-            </div>
+        {/* ROW 0: Live Status Monitor (Sleek) */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mr-2 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Live Status
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="text-[11px] font-bold text-slate-700">{liveStatus.ONLINE || 0} Online</span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span className="text-[11px] font-bold text-slate-700">{liveStatus.IN_MEETING || 0} Meeting</span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span className="text-[11px] font-bold text-slate-700">{liveStatus.ON_BREAK || 0} Break</span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+            <span className="text-[11px] font-bold text-slate-700">{liveStatus.OFFLINE || 0} Offline</span>
           </div>
         </div>
 
@@ -348,8 +347,18 @@ export default function Dashboard() {
                   {currentList.map(item => (
                     <div key={`${item.type}-${item.id}`} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-4 w-1/3">
-                        <div className={clsx("w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-black text-white text-sm shadow-sm", item.type === "Candidate" ? "bg-blue-600" : "bg-emerald-500")}>
-                          {item.avatarInitials}
+                        <div className="relative">
+                          <div className={clsx("w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-black text-white text-sm shadow-sm", item.type === "Candidate" ? "bg-blue-600" : "bg-emerald-500")}>
+                            {item.avatarInitials}
+                          </div>
+                          {item.type === "Employee" && (
+                            <span className={clsx(
+                              "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white",
+                              item.liveStatus === "ONLINE" ? "bg-emerald-500" :
+                              item.liveStatus === "IN_MEETING" ? "bg-rose-500" :
+                              item.liveStatus === "ON_BREAK" ? "bg-amber-500" : "bg-slate-300"
+                            )} />
+                          )}
                         </div>
                         <div>
                           <div className="font-black text-slate-800 text-sm">{item.name}</div>

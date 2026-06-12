@@ -86,7 +86,12 @@ function isNestedGroup(item: NavChild | NavNestedGroup): item is NavNestedGroup 
   return "children" in item;
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState<string[]>([
     "HRM",
@@ -167,10 +172,20 @@ export default function Sidebar() {
   const showLogo = Boolean(logoUrl) && !logoLoadError;
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-56 bg-white border-r border-cream-dark flex flex-col z-40 shadow-sm">
+    <aside className={clsx(
+      "fixed left-0 top-0 h-screen w-56 bg-white border-r border-cream-dark flex flex-col z-50 shadow-sm transition-transform duration-300 ease-in-out md:translate-x-0",
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    )}>
+      {/* Mobile Close Button */}
+      <div className="md:hidden absolute top-4 right-4 z-50">
+        <button onClick={onClose} className="p-2 bg-slate-100 rounded-full text-slate-600 hover:bg-slate-200 hover:text-red-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
       {/* Logo Section */}
-      <Link href="/dashboard" className="px-5 py-6 border-b border-cream-dark flex-shrink-0 bg-white/50 backdrop-blur-sm block hover:bg-slate-50 transition-colors">
-        <div className="flex items-center gap-3">
+      <Link href="/dashboard" onClick={onClose} className="px-5 py-6 border-b border-cream-dark flex-shrink-0 bg-white/50 backdrop-blur-sm block hover:bg-slate-50 transition-colors">
+        <div className="flex items-center gap-3 pr-8">
           {showLogo ? (
             <div className="flex items-center gap-3 w-full">
               <div className="hover:scale-105 transition-transform duration-300">
@@ -218,6 +233,7 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href!}
+                onClick={onClose}
                 className={clsx("sidebar-link", pathname === item.href && "active")}
               >
                 <item.icon size={15} />
@@ -274,6 +290,7 @@ export default function Sidebar() {
                                 <Link
                                   key={sc.href}
                                   href={sc.href}
+                                  onClick={onClose}
                                   className={clsx(
                                     "sidebar-link text-xs py-1",
                                     pathname === sc.href && "active"
@@ -292,6 +309,7 @@ export default function Sidebar() {
                       <Link
                         key={c.href}
                         href={c.href}
+                        onClick={onClose}
                         className={clsx(
                           "sidebar-link text-xs py-1.5",
                           pathname === c.href && "active"

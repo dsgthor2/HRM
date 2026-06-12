@@ -181,7 +181,7 @@ export default function DocumentsPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    <a href={`https://defensebluhrm.info${d.fileUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
+                    <a href={`https://hrm-6kly.onrender.com${d.fileUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
                       className="btn-ghost btn-sm flex-1 flex items-center justify-center gap-1">
                       <Eye size={13} /> View
                     </a>

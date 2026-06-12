@@ -21,7 +21,7 @@ import {
 function resolveLogoUrl(raw?: string | null): string {
   if (!raw || raw.trim() === "") return "";
   if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api";
   const base = apiUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
   const path = raw.startsWith("/") ? raw : `/${raw}`;
   return `${base}${path}`;

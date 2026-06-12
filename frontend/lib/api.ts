@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api",
 });
 
 api.interceptors.request.use((config) => {

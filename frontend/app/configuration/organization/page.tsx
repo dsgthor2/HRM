@@ -24,7 +24,7 @@ const INDIAN_STATES = [
 function resolveLogoUrl(raw?: string): string {
   if (!raw) return "";
   if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api";
   const base = apiUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
   const path = raw.startsWith("/") ? raw : `/${raw}`;
   return `${base}${path}`;

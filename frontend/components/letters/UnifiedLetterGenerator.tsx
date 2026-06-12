@@ -809,7 +809,7 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
           empType: form.empType,
         },
       });
-      window.open(`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${res.data.pdfUrl}?token=${localStorage.getItem('fg_token')}`, '_blank');
+      window.open(`${(process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api").replace("/api", "")}${res.data.pdfUrl}?token=${localStorage.getItem('fg_token')}`, '_blank');
     } catch (err: any) {
       alert(err?.response?.data?.error || err?.response?.data?.message || "Preview failed.");
     } finally { setLoading(false); }
@@ -1901,7 +1901,7 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
                 )}
               </div>
               <div className="flex flex-col gap-3 max-w-xs mx-auto pt-2">
-                <a href={`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${genResult?.pdfUrl}?token=${localStorage.getItem('fg_token')}`}
+                <a href={`${(process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api").replace("/api", "")}${genResult?.pdfUrl}?token=${localStorage.getItem('fg_token')}`}
                   target="_blank" rel="noreferrer"
                   className="flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-800 text-white rounded-xl font-black text-sm hover:bg-slate-700 transition-all shadow-lg">
                   <Download size={16} /> Download PDF

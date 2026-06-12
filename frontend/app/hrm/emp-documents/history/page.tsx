@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import clsx from "clsx";
 
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "https://hrm-6kly.onrender.com/api").replace("/api", "");
 
 const TYPE_COLORS: Record<string, string> = {
   OFFER: "bg-blue-50 text-blue-700 border-blue-200",

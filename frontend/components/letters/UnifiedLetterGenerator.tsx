@@ -160,6 +160,7 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
   const [genResult, setGenResult] = useState<any>(null);
   const [form, setForm] = useState({ ...INIT });
   const [isNewTarget, setIsNewTarget] = useState(false);
+  const [sendEmailImmediately, setSendEmailImmediately] = useState(false);
 
   const [candidates, setCandidates] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -185,7 +186,6 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
     // Step 2: Document & Template
     if (step === 2) {
       if (!letterType) { alert("⚠️ Please select a letter type."); return false; }
-      if (!selectedTemplate) { alert("⚠️ Please select a template."); return false; }
     }
     // Step 3: Personal Information
     if (step === 3) {
@@ -745,6 +745,7 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
           department: form.department,
           empType: form.empType,
         },
+        sendEmail: sendEmailImmediately,
       });
       setGenResult(res.data);
 
@@ -808,7 +809,7 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
           empType: form.empType,
         },
       });
-      window.open(`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${res.data.pdfUrl}?token=${localStorage.getItem('token')}`, '_blank');
+      window.open(`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${res.data.pdfUrl}?token=${localStorage.getItem('fg_token')}`, '_blank');
     } catch (err: any) {
       alert(err?.response?.data?.error || err?.response?.data?.message || "Preview failed.");
     } finally { setLoading(false); }
@@ -1803,14 +1804,14 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
                   </div>
                 </div>
 
-                <div className="p-8 grid grid-cols-2 gap-y-6 gap-x-12">
-                  <div>
+                <div className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12">
+                  <div className="truncate">
                     <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Email</div>
-                    <div className="text-sm font-bold">{form.email || "—"}</div>
+                    <div className="text-sm font-bold truncate">{form.email || "—"}</div>
                   </div>
-                  <div>
+                  <div className="truncate">
                     <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Mobile</div>
-                    <div className="text-sm font-bold">{form.mobile || "—"}</div>
+                    <div className="text-sm font-bold truncate">{form.mobile || "—"}</div>
                   </div>
                   <div>
                     <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">PAN</div>
@@ -1831,24 +1832,24 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
                         <IndianRupee size={12} /> Edit {(letterType === "INTERNSHIP" || form.empType === "Internship" || selectedTemplate?.name?.toLowerCase().includes("internship")) ? "Stipend" : "Salary"}
                       </button>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="bg-white/5 rounded-2xl p-4 text-center border border-white/5 shadow-inner">
                         <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">{(letterType === "INTERNSHIP" || form.empType === "Internship" || selectedTemplate?.name?.toLowerCase().includes("internship")) ? "Monthly Stipend" : "Annual CTC"}</div>
-                        <div className="text-lg font-black text-blue-400">₹{(letterType === "INTERNSHIP" || form.empType === "Internship" || selectedTemplate?.name?.toLowerCase().includes("internship")) ? fmt(form.revisedCtcOffer) : fmt(salary.annual.ctc)}</div>
+                        <div className="text-lg font-black text-blue-400 truncate">₹{(letterType === "INTERNSHIP" || form.empType === "Internship" || selectedTemplate?.name?.toLowerCase().includes("internship")) ? fmt(form.revisedCtcOffer) : fmt(salary.annual.ctc)}</div>
                       </div>
                       {!(letterType === "INTERNSHIP" || form.empType === "Internship" || selectedTemplate?.name?.toLowerCase().includes("internship")) ? (
                         <>
                           <div className="bg-white/5 rounded-2xl p-4 text-center border border-white/5 shadow-inner">
                             <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Monthly</div>
-                            <div className="text-lg font-black text-white">₹{fmt(salary.monthly.ctc)}</div>
+                            <div className="text-lg font-black text-white truncate">₹{fmt(salary.monthly.ctc)}</div>
                           </div>
                           <div className="bg-white/5 rounded-2xl p-4 text-center border border-white/5 shadow-inner">
                             <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Structure</div>
-                            <div className="text-lg font-black text-emerald-400">{form.basicPct}% + {form.hraPct}%</div>
+                            <div className="text-lg font-black text-emerald-400 truncate">{form.basicPct}% + {form.hraPct}%</div>
                           </div>
                         </>
                       ) : (
-                        <div className="col-span-2 bg-indigo-500/5 rounded-2xl p-4 flex items-center justify-center border border-white/5 shadow-inner">
+                        <div className="sm:col-span-2 bg-indigo-500/5 rounded-2xl p-4 flex items-center justify-center border border-white/5 shadow-inner">
                            <div className="text-[10px] font-black text-white/30 uppercase tracking-widest italic">Professional Internship Program</div>
                         </div>
                       )}
@@ -1863,6 +1864,23 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
                     Template: <span className="text-white/60">{selectedTemplate?.name || "Auto-Fallback"}</span>
                   </span>
                 </div>
+
+                {/* Email Automation Option */}
+                <div className="px-8 pb-4 flex items-center justify-between border-t border-white/5 pt-4 mt-2">
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="checkbox" 
+                      id="sendEmailCbx"
+                      checked={sendEmailImmediately} 
+                      onChange={e => setSendEmailImmediately(e.target.checked)}
+                      className="w-4 h-4 rounded text-blue-500 bg-white/10 border-white/20 focus:ring-blue-500 focus:ring-offset-slate-900 cursor-pointer"
+                    />
+                    <label htmlFor="sendEmailCbx" className="text-sm font-bold text-white/90 cursor-pointer select-none">
+                      Send Email Immediately upon generation
+                    </label>
+                  </div>
+                  {sendEmailImmediately && <span className="text-[10px] font-black uppercase tracking-widest text-blue-400 bg-blue-400/10 px-2 py-1 rounded">Automation Enabled</span>}
+                </div>
               </div>
             </div>
           )}
@@ -1876,9 +1894,14 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
               <div>
                 <h2 className="text-2xl font-black text-slate-800">Letter Generated!</h2>
                 <p className="text-slate-400 text-sm mt-1">{ltConfig.label} is ready for download and distribution.</p>
+                {genResult?.emailAttempted && (
+                   <p className="text-blue-500 text-sm mt-2 font-bold flex items-center justify-center gap-1">
+                     <Check size={14} /> Email has been sent to {form.email || form.contact}
+                   </p>
+                )}
               </div>
               <div className="flex flex-col gap-3 max-w-xs mx-auto pt-2">
-                <a href={`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${genResult?.pdfUrl}?token=${localStorage.getItem('token')}`}
+                <a href={`${(process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "")}${genResult?.pdfUrl}?token=${localStorage.getItem('fg_token')}`}
                   target="_blank" rel="noreferrer"
                   className="flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-800 text-white rounded-xl font-black text-sm hover:bg-slate-700 transition-all shadow-lg">
                   <Download size={16} /> Download PDF
@@ -1904,24 +1927,24 @@ export default function UnifiedLetterGenerator({ initialType, onBack, editId: pr
 
         {/* Navigation */}
         {step > 1 && step <= 11 && (
-          <div className="flex items-center justify-between px-7 py-4 border-t border-slate-100 bg-slate-50/50">
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 px-4 sm:px-7 py-4 border-t border-slate-100 bg-slate-50/50">
             <button onClick={prevStep}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-white transition-all">
+              className="flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-xs sm:text-sm font-bold hover:bg-white transition-all order-2 sm:order-1">
               <ChevronLeft size={15} /> Back
             </button>
-            <div className="flex items-center gap-3">
+            <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3 order-1 sm:order-2">
               <button onClick={() => setShowPreview(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 font-bold text-sm hover:bg-blue-100 transition-all">
-                <Eye size={15} /> Preview Details
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm hover:bg-blue-100 transition-all">
+                <Eye size={15} /> <span className="hidden sm:inline">Preview Details</span><span className="sm:hidden">Preview</span>
               </button>
               {step === 11 ? (
                 <button onClick={generate} disabled={loading}
-                  className="flex items-center gap-2 px-7 py-2.5 rounded-lg bg-slate-800 text-white font-black text-sm hover:bg-slate-700 disabled:opacity-50 transition-all shadow-md">
-                  {loading ? <><RefreshCw size={15} className="animate-spin" /> Generating...</> : <><FileText size={15} /> Generate Letter</>}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 px-4 sm:px-7 py-2.5 rounded-lg bg-slate-800 text-white font-black text-xs sm:text-sm hover:bg-slate-700 disabled:opacity-50 transition-all shadow-md">
+                  {loading ? <><RefreshCw size={15} className="animate-spin" /> <span className="hidden sm:inline">Generating...</span><span className="sm:hidden">Wait...</span></> : <><FileText size={15} /> <span className="hidden sm:inline">Generate Letter</span><span className="sm:hidden">Generate</span></>}
                 </button>
               ) : (
                 <button onClick={nextStep}
-                  className={clsx("flex items-center gap-2 px-7 py-2.5 rounded-lg text-white font-black text-sm transition-all shadow-md hover:opacity-90", ltConfig.color)}>
+                  className={clsx("flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 px-4 sm:px-7 py-2.5 rounded-lg text-white font-black text-xs sm:text-sm transition-all shadow-md hover:opacity-90", ltConfig.color)}>
                   Continue <ChevronRight size={15} />
                 </button>
               )}

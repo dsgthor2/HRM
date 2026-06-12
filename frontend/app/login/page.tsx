@@ -36,7 +36,7 @@ export default function LoginPage() {
   const [showRegPw, setShowRegPw] = useState(false);
 
   // Forgot password
-  const [forgotForm, setForgotForm] = useState({ email: "", newPassword: "", confirm: "" });
+  const [forgotForm, setForgotForm] = useState({ email: "" });
   const [forgotError, setForgotError] = useState("");
   const [forgotSuccess, setForgotSuccess] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
@@ -49,7 +49,7 @@ export default function LoginPage() {
       const res = await api.post("/auth/login", loginForm);
       setAuth(res.data.token, res.data.user);
       // Redirect based on role
-      if (res.data.user.role === "ADMIN") {
+      if (res.data.user.role === "ADMIN" || res.data.user.role === "SUPER_ADMIN") {
         router.push("/dashboard");
       } else {
         router.push("/user/dashboard");
@@ -94,24 +94,20 @@ export default function LoginPage() {
     e.preventDefault();
     setForgotError("");
     setForgotSuccess("");
-    if (forgotForm.newPassword !== forgotForm.confirm) {
-      setForgotError("Passwords do not match");
+    
+    if (!forgotForm.email) {
+      setForgotError("Please enter your email address");
       return;
     }
-    if (forgotForm.newPassword.length < 6) {
-      setForgotError("Password must be at least 6 characters");
-      return;
-    }
+
     setForgotLoading(true);
     try {
-      await api.post("/auth/forgot-password", {
+      const res = await api.post("/auth/forgot-password", {
         email: forgotForm.email,
-        newPassword: forgotForm.newPassword
       });
-      setForgotSuccess("Password reset successfully! You can now log in.");
-      setTimeout(() => { setTab("login"); setForgotSuccess(""); }, 2000);
+      setForgotSuccess(res.data.message || "Email sent successfully.");
     } catch (err: any) {
-      setForgotError(err.response?.data?.message || "Reset failed");
+      setForgotError(err.response?.data?.message || "Failed to send reset link.");
     } finally {
       setForgotLoading(false);
     }
@@ -441,28 +437,18 @@ export default function LoginPage() {
                 <ArrowLeft size={14} /> Back to Sign In
               </button>
               <h2 className="text-2xl font-black text-navy mb-1">Reset Password</h2>
-              <p className="text-slate-400 text-sm mb-6">Enter your email and set a new password</p>
+              <p className="text-slate-400 text-sm mb-6">Enter your email and we'll send you a reset link.</p>
               <form onSubmit={handleForgot} className="space-y-4">
                 <div>
                   <label className="label">Email address</label>
                   <input type="email" className="input" placeholder="your@email.com"
                     value={forgotForm.email} onChange={e => setForgotForm(f => ({ ...f, email: e.target.value }))} required />
                 </div>
-                <div>
-                  <label className="label">New Password</label>
-                  <input type="password" className="input" placeholder="Min 6 characters"
-                    value={forgotForm.newPassword} onChange={e => setForgotForm(f => ({ ...f, newPassword: e.target.value }))} required />
-                </div>
-                <div>
-                  <label className="label">Confirm New Password</label>
-                  <input type="password" className="input" placeholder="Repeat password"
-                    value={forgotForm.confirm} onChange={e => setForgotForm(f => ({ ...f, confirm: e.target.value }))} required />
-                </div>
                 {forgotError && <div className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">{forgotError}</div>}
                 {forgotSuccess && <div className="text-emerald-600 text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">{forgotSuccess}</div>}
                 <button type="submit" className="btn-primary w-full py-2.5" disabled={forgotLoading}>
                   <KeyRound size={16} />
-                  {forgotLoading ? "Resetting..." : "Reset Password"}
+                  {forgotLoading ? "Sending Link..." : "Send Reset Link"}
                 </button>
               </form>
             </>

@@ -247,59 +247,61 @@ function CompanyTab() {
         <div className="flex items-center gap-3"><div className="w-1 h-7 bg-blue-500 rounded-full" /><h3 className="font-bold text-slate-800 text-lg">Edit Company Details</h3></div>
         <button onClick={cancel} className="text-slate-400 hover:text-slate-600 transition-colors"><X size={18} /></button>
       </div>
-      <div className="flex items-center gap-3 mb-5">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0">Company Logo:</label>
-        <input className="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-500 bg-slate-50" readOnly value={logoFile ? logoFile.name : (editData.logoUrl || "")} placeholder="No file chosen" />
-        <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (!f) return; setLogoFile(f); setLogoPreview(URL.createObjectURL(f)); }} />
-        <button onClick={() => fileRef.current?.click()} className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 whitespace-nowrap transition-colors">Browse file</button>
+      <div className="flex flex-col md:flex-row md:items-center gap-3 mb-5">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0">Company Logo:</label>
+        <div className="flex gap-2 flex-1 w-full">
+          <input className="flex-1 min-w-0 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-500 bg-slate-50" readOnly value={logoFile ? logoFile.name : (editData.logoUrl || "")} placeholder="No file chosen" />
+          <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (!f) return; setLogoFile(f); setLogoPreview(URL.createObjectURL(f)); }} />
+          <button onClick={() => fileRef.current?.click()} className="px-4 md:px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 whitespace-nowrap transition-colors">Browse</button>
+        </div>
       </div>
       {editLogoPreviewUrl && (
-        <div className="flex items-center gap-3 mb-4">
-          <span className="w-52 shrink-0" />
+        <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+          <span className="hidden md:block w-52 shrink-0" />
           <div className="border-2 border-dashed border-blue-200 rounded-xl p-3 w-28 bg-blue-50/30">
             <img src={editLogoPreviewUrl} alt="preview" className="w-full h-auto object-contain max-h-14" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
         </div>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0">Company Name: <span className="text-red-500">*</span></label>
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 mb-4">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0">Company Name: <span className="text-red-500">*</span></label>
         <input className={inputCls} value={editData.name || ""} onChange={e => set("name", e.target.value)} />
       </div>
-      <div className="flex items-center gap-3 mb-4">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0">Email ID: <span className="text-red-500">*</span></label>
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 mb-4">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0">Email ID: <span className="text-red-500">*</span></label>
         <input className={inputCls} type="email" value={editData.email || ""} onChange={e => set("email", e.target.value)} />
       </div>
-      <div className="flex items-start gap-3 mb-4">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0 pt-2">Secondary Email</label>
-        <div className="flex-1 flex flex-col gap-2">
+      <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-3 mb-4">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0 md:pt-2">Secondary Email</label>
+        <div className="flex-1 flex flex-col gap-2 w-full min-w-0">
           {secondaryEmails.map(email => (
-            <div key={email} className="flex items-center gap-2">
-              <span className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50 text-slate-700">{email}</span>
+            <div key={email} className="flex items-center gap-2 w-full">
+              <span className="flex-1 min-w-0 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50 text-slate-700 overflow-hidden text-ellipsis">{email}</span>
               <button onClick={() => setSecondaryEmails(p => p.filter(e => e !== email))} className="w-7 h-7 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 shrink-0 transition-colors"><X size={13} /></button>
             </div>
           ))}
-          <div className="flex items-center gap-2">
-            <input className={inputCls} type="email" placeholder="Add secondary email" value={newSecondaryEmail} onChange={e => setNewSecondaryEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && addSecondaryEmail()} />
-            <button onClick={addSecondaryEmail} className="px-4 py-2 rounded-full border border-blue-500 text-blue-600 text-sm font-semibold hover:bg-blue-50 whitespace-nowrap transition-colors">Add Email</button>
+          <div className="flex items-center gap-2 w-full">
+            <input className={`${inputCls} flex-1 min-w-0`} type="email" placeholder="Add secondary email" value={newSecondaryEmail} onChange={e => setNewSecondaryEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && addSecondaryEmail()} />
+            <button onClick={addSecondaryEmail} className="px-4 py-2 shrink-0 rounded-full border border-blue-500 text-blue-600 text-sm font-semibold hover:bg-blue-50 whitespace-nowrap transition-colors">Add</button>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-3 mb-4">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0">Industry Type:</label>
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 mb-4">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0">Industry Type:</label>
         <select className={selectCls} value={editData.companyType || ""} onChange={e => set("companyType", e.target.value)}>
           <option value="">Select...</option>
           {["Human Resources / HR","Information Technology","Finance","Manufacturing","Healthcare","Education","Other"].map(o => <option key={o}>{o}</option>)}
         </select>
       </div>
       {[{label:"Pin Code:",key:"pincode"},{label:"City:",key:"city"},{label:"State:",key:"state"},{label:"Registered Company Address:",key:"address"}].map(({label,key})=>(
-        <div key={key} className="flex items-center gap-3 mb-4">
-          <label className="w-52 text-sm text-slate-700 font-medium shrink-0">{label} <span className="text-red-500">*</span></label>
+        <div key={key} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 mb-4">
+          <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0">{label} <span className="text-red-500">*</span></label>
           <input className={inputCls} value={editData[key]||""} onChange={e=>set(key,e.target.value)} />
         </div>
       ))}
-      <div className="flex items-start gap-3 mb-4">
-        <label className="w-52 text-sm text-slate-700 font-medium shrink-0 pt-2">Description:</label>
-        <textarea className={inputCls + " resize-y"} rows={4} placeholder="Add company description here" value={editData.description||""} onChange={e=>set("description",e.target.value)} />
+      <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-3 mb-4">
+        <label className="w-full md:w-52 text-sm text-slate-700 font-medium shrink-0 md:pt-2">Description:</label>
+        <textarea className={inputCls + " resize-y w-full"} rows={4} placeholder="Add company description here" value={editData.description||""} onChange={e=>set("description",e.target.value)} />
       </div>
       <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
         <button onClick={cancel} className="px-6 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>

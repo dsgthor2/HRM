@@ -610,7 +610,7 @@ export default function PayslipPage() {
                         <button className="btn-sm bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 gap-1" onClick={() => setPreviewSlip(p)}>
                           <Eye size={12} /> Preview
                         </button>
-                        <a href={`https://defensebluhrm.info${p.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
+                        <a href={`https://defensebluhrm.info${p.pdfUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
                           className="btn-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 gap-1">
                           <Download size={12} /> PDF
                         </a>
@@ -1260,7 +1260,7 @@ export default function PayslipPage() {
             </div>
             <div className="flex gap-3 px-6 pb-6">
               {previewSlip.pdfUrl && (
-                <a href={`https://defensebluhrm.info${previewSlip.pdfUrl}?token=${localStorage.getItem('token')}`} target="_blank" rel="noreferrer"
+                <a href={`https://defensebluhrm.info${previewSlip.pdfUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
                   className="btn-primary flex-1 gap-2 text-center justify-center">
                   <Download size={15} /> Download PDF
                 </a>
@@ -1327,7 +1327,7 @@ export default function PayslipPage() {
                 <button 
                   onClick={() => {
                     const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
-                    window.open(`${baseUrl}${emailSlip.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
+                    window.open(`${baseUrl}${emailSlip.pdfUrl}?token=${localStorage.getItem('fg_token')}`, "_blank");
                   }}
                   className="btn-ghost flex-1 gap-2 border border-slate-200">
                   <Download size={15} /> Download PDF

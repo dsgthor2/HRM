@@ -601,7 +601,7 @@ export default function LetterWizard({ isOpen, onClose, onSuccess, type, initial
               </div>
               <div className="flex gap-4 justify-center pt-4">
                 <a
-                  href={`https://defensebluhrm.info${generated?.pdfUrl}?token=${localStorage.getItem('token')}`}
+                  href={`https://defensebluhrm.info${generated?.pdfUrl}?token=${localStorage.getItem('fg_token')}`}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 px-8 py-4 bg-navy text-white rounded-2xl font-black text-sm hover:bg-navy/90 transition-all shadow-xl"

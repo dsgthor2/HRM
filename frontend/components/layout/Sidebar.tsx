@@ -15,6 +15,7 @@ import {
   Settings,
   LayoutDashboard,
   FileText,
+  Shield,
 } from "lucide-react";
 
 function resolveLogoUrl(raw?: string | null): string {
@@ -141,7 +142,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   useEffect(() => {
     const u = getUser();
     setUser(u);
-    setIsAdmin(u?.role === "ADMIN");
+    setIsAdmin(u?.role === "ADMIN" || u?.role === "SUPER_ADMIN");
   }, []);
 
   // Filter navigation based on role
@@ -327,7 +328,17 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="px-2 py-3 border-t border-cream-dark flex-shrink-0">
+      <div className="px-2 py-3 border-t border-cream-dark flex-shrink-0 flex flex-col gap-1">
+        {user?.role === "SUPER_ADMIN" && (
+          <Link
+            href="/superadmin"
+            onClick={onClose}
+            className="sidebar-link w-full text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 font-semibold border border-indigo-100 mb-1"
+          >
+            <Shield size={15} />
+            <span>Admin Dashboard</span>
+          </Link>
+        )}
         <button
           onClick={logout}
           className="sidebar-link w-full text-red-400 hover:bg-red-50 hover:text-red-600"

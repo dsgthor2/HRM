@@ -115,12 +115,7 @@ async function calcSalary(employee, { workingDays = 26, presentDays, otherAllow 
   const wd = parseInt(workingDays);
   const pd = presentDays !== undefined ? parseInt(presentDays) : wd;
   
-  let activeSnapshot = null;
-  if (month && year) {
-    activeSnapshot = await getActiveSalary(employee.id, month, year);
-  }
-
-  const gross = activeSnapshot?.salary || (employee.salary || 0);
+  const gross = employee.salary || 0;
   const lop = Math.max(0, wd - pd);
   const lopDeduct = lop > 0 ? (gross / wd) * lop : 0;
   const effectiveGross = gross - lopDeduct;
@@ -132,12 +127,12 @@ async function calcSalary(employee, { workingDays = 26, presentDays, otherAllow 
     return c ? c.value : fallback;
   };
 
-  const bP = (Number(bPctOdl) || (activeSnapshot?.basicPct ?? employee.basicPct ?? getVal("Basic", 40))) / 100;
+  const bP = (Number(bPctOdl) || (employee.basicPct ?? getVal("Basic", 40))) / 100;
   const basic = effectiveGross * bP;
 
   // HRA Calculation (Location based or Override)
   let hra = 3000; // fallback
-  const hPctO = Number(hPctOdl) || activeSnapshot?.hraPct;
+  const hPctO = Number(hPctOdl) || employee.hraPct;
   if (hPctO !== undefined && hPctO !== null) {
     hra = basic * (Number(hPctO) / 100);
   } else {
@@ -170,19 +165,15 @@ async function calcSalary(employee, { workingDays = 26, presentDays, otherAllow 
 
   const epfObj = comps.find(x => x.name.toUpperCase() === "EPF");
   const epfP = (epfObj ? epfObj.value : 12) / 100;
-  const epf = (employee.epfEmployee !== null && employee.epfEmployee !== undefined) 
+  const epf = (employee.epfEmployee !== null && employee.epfEmployee !== undefined && employee.epfEmployee !== "") 
     ? Number(employee.epfEmployee) 
-    : (activeSnapshot?.epfEmployee !== null && activeSnapshot?.epfEmployee !== undefined)
-      ? Number(activeSnapshot.epfEmployee)
-      : 0; 
+    : 0; 
 
   const esiObj = comps.find(x => x.name.toUpperCase() === "ESI");
   const esiP = (esiObj ? esiObj.value : 0) / 100; 
-  const esi = (employee.esiEmployee !== null && employee.esiEmployee !== undefined) 
+  const esi = (employee.esiEmployee !== null && employee.esiEmployee !== undefined && employee.esiEmployee !== "") 
     ? Number(employee.esiEmployee) 
-    : (activeSnapshot?.esiEmployee !== null && activeSnapshot?.esiEmployee !== undefined)
-      ? Number(activeSnapshot.esiEmployee)
-      : 0;
+    : 0;
 
   const tds = 0; // TDS removed as per user request
 
@@ -192,9 +183,6 @@ async function calcSalary(employee, { workingDays = 26, presentDays, otherAllow 
     if (employee.ptOverride !== null && employee.ptOverride !== undefined) {
       pt = Number(employee.ptOverride);
       console.log(`[PT Calc] Using manual override PT from employee record: ${pt}`);
-    } else if (activeSnapshot?.professionalTax !== null && activeSnapshot?.professionalTax !== undefined) {
-      pt = Number(activeSnapshot.professionalTax);
-      console.log(`[PT Calc] Using snapshot PT: ${pt}`);
     } else {
       pt = 0;
       console.log(`[PT Calc] No manual PT override, defaulting to 0 as per user preference`);

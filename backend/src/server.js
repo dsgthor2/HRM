@@ -61,7 +61,10 @@ import assetsRouter from "./routes/assets.js";
 import expensesRouter from "./routes/expenses.js";
 import performanceRouter from "./routes/performance.js";
 
+import superadminRouter from "./routes/superadmin.js";
+
 app.use("/api/auth", authRouter);
+app.use("/api/superadmin", superadminRouter);
 app.use("/api/employees", employeesRouter);
 app.use("/api/documents", documentsRouter);
 app.use("/api/attendance", attendanceRouter);

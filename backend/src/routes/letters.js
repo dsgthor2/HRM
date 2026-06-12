@@ -67,7 +67,7 @@ router.post("/preview", async (req, res) => {
 // ─── POST /letters/generate-advanced ─────────────────────────────────────────
 router.post("/generate-advanced", async (req, res) => {
   try {
-    const { candidateId, employeeId, type, data, templateId, salaryData } = req.body;
+    const { candidateId, employeeId, type, data, templateId, salaryData, sendEmail: shouldSendEmail } = req.body;
 
     const company = (await prisma.company.findFirst()) || undefined;
     const template = templateId
@@ -305,7 +305,65 @@ router.post("/generate-advanced", async (req, res) => {
       }
     }
 
-    res.json({ success: true, pdfUrl, letterId: letter.id });
+    if (shouldSendEmail) {
+      try {
+        const admin = await prisma.user.findUnique({ where: { id: req.user.id } });
+        const hasPersonalSmtp = admin?.smtpUser && admin?.smtpPass;
+        const recipientEmail = targetInfo.email || targetInfo.contact;
+        const recipientName = targetInfo.name || "Candidate";
+
+        if (recipientEmail) {
+          const attachments = [];
+          if (pdfUrl) {
+            const fileId = pdfUrl.split('/').pop();
+            const dbFile = await prisma.fileStorage.findUnique({ where: { id: fileId } });
+            if (dbFile) {
+              attachments.push({
+                filename: `${type}_Letter_${recipientName.replace(/\s+/g, "_")}.pdf`,
+                content: dbFile.data,
+              });
+            }
+          }
+
+          await sendEmail({
+            to: recipientEmail,
+            from: `"${req.user?.name || "HR Department"} | DefenseBlu HRMS" <${hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER)}>`,
+            replyTo: hasPersonalSmtp ? admin.smtpUser : (req.user?.email || process.env.SMTP_USER),
+            auth: hasPersonalSmtp ? { user: admin.smtpUser, pass: admin.smtpPass } : null,
+            subject: `Official Document: ${type} Letter – ${recipientName}`,
+            html: `
+              <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
+                <div style="background: #1e2d4a; padding: 20px 28px; border-radius: 8px; margin-bottom: 24px;">
+                  <h2 style="color: #fff; margin: 0; font-size: 18px;">DefenseBlu</h2>
+                  <p style="color: #94a3b8; margin: 4px 0 0; font-size: 13px;">Human Resources Department</p>
+                </div>
+                <p style="font-size: 15px; color: #1a1a1a;">Dear <strong>${recipientName}</strong>,</p>
+                <p style="font-size: 14px; color: #374151; line-height: 1.6;">
+                  Please find attached your official <strong>${type} Letter</strong> from DefenseBlu Private Limited.
+                </p>
+                <p style="font-size: 14px; color: #374151;">
+                  If you have any questions, please reach out to our HR team.
+                </p>
+                <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+                  <p style="font-size: 12px; color: #64748b; margin: 0;">This is an automatically generated email. Please do not reply directly to this address.</p>
+                </div>
+              </div>
+            `,
+            attachments,
+          });
+
+          await prisma.letter.update({
+            where: { id: letter.id },
+            data: { sentByEmail: true },
+          });
+          console.log(`[EMAIL SUCCESS] Letter sent to ${recipientEmail}`);
+        }
+      } catch (emailErr) {
+        console.error("[AUTO EMAIL ERROR]", emailErr);
+      }
+    }
+
+    res.json({ success: true, pdfUrl, letterId: letter.id, emailAttempted: !!shouldSendEmail });
   } catch (err) {
     console.error("[GENERATE ERROR]", err);
     res.status(500).json({ error: "Failed to generate letter" });

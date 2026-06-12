@@ -24,7 +24,7 @@ const TYPE_COLORS: Record<string, string> = {
 
 // ─── PREVIEW MODAL ────────────────────────────────────────────────────────────
 function PreviewModal({ letter, onClose }: { letter: any; onClose: () => void }) {
-  const pdfUrl = letter.pdfUrl ? `${API_BASE}${letter.pdfUrl}?token=${localStorage.getItem('token')}` : null;
+  const pdfUrl = letter.pdfUrl ? `${API_BASE}${letter.pdfUrl}?token=${localStorage.getItem('fg_token')}` : null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -578,7 +578,7 @@ export default function LetterHistoryPage() {
                           {/* Download */}
                           {l.pdfUrl && (
                             <a
-                              href={`${API_BASE}${l.pdfUrl}?token=${localStorage.getItem('token')}`}
+                              href={`${API_BASE}${l.pdfUrl}?token=${localStorage.getItem('fg_token')}`}
                               target="_blank"
                               rel="noreferrer"
                               title="Download PDF"

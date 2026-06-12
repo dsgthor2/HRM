@@ -27,8 +27,9 @@ export default function AppShell({ children, title }: Props) {
     const isUserPortal = typeof window !== "undefined" && window.location.pathname.startsWith("/user/");
 
     // Non-admin users get redirected to their own portal
-    if (user && user.role !== "ADMIN" && !isUserPortal) {
+    if (user && user.role !== "ADMIN" && user.role !== "SUPER_ADMIN" && !isUserPortal) {
       router.push("/user/dashboard");
+      return;
     }
   }, [router]);
 

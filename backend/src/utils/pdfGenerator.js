@@ -61,7 +61,7 @@ const CONTENT_WIDTH = PAGE_W - MARGIN * 2;
 
 const DEFAULT_CO = {
     name: "DefenseBlu\nPrivate Limited",
-    address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
+    address: "", // Can be configured via Organization Data in Settings
     email: "hr@defenseblu.com",
 };
 
@@ -139,7 +139,7 @@ export async function generatePayslipPDF(data, employee, template = "standard") 
 
             const mNum = String(MONTHS.indexOf(data.month) + 1).padStart(2, "0");
             const empId = employee.employeeId || (employee.id ? employee.id.slice(-6) : "");
-            const refNo = `FING/PS/${data.year}/${mNum}/${String(empId).padStart(4, "0")}`;
+            const refNo = `DBLU/PS/${data.year}/${mNum}/${String(empId).padStart(4, "0")}`;
 
             const formatDateLocal = (d) => {
                 if (!d) return "";
@@ -821,7 +821,7 @@ export async function generateProfessionalLetter(options) {
         refNum = refDigits.padStart(4, "0");
     }
 
-    doc.font(F.reg).fontSize(9).fillColor(C.muted).text(`Ref: FING/${refYear}/${refNum}`, MARGIN, doc.y);
+    doc.font(F.reg).fontSize(9).fillColor(C.muted).text(`Ref: DBLU/${refYear}/${refNum}`, MARGIN, doc.y);
     doc.moveDown(0.2);
     doc.font(F.reg).fontSize(9).fillColor(C.muted).text(`Date: ${today}`, MARGIN, doc.y);
     doc.moveDown(0.5);

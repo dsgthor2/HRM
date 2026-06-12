@@ -90,7 +90,7 @@ export default function UserDashboard() {
   useEffect(() => {
     const u = getUser();
     if (!u) { router.push("/login"); return; }
-    if (u.role === "ADMIN") { router.push("/dashboard"); return; }
+    if (u.role === "ADMIN" || u.role === "SUPER_ADMIN") { router.push("/dashboard"); return; }
     setUser(u);
     setMounted(true);
     setProfileForm({ name: u.name || "", phone: "", department: "", designation: "" });
@@ -694,7 +694,7 @@ export default function UserDashboard() {
                       {l.pdfUrl && (
                         <button onClick={() => {
                           const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
-                          window.open(`${baseUrl}${l.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
+                          window.open(`${baseUrl}${l.pdfUrl}?token=${localStorage.getItem('fg_token')}`, "_blank");
                         }} className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
                           <Download size={18} />
                         </button>
@@ -727,7 +727,7 @@ export default function UserDashboard() {
                         {p.pdfUrl && (
                           <button onClick={() => {
                             const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://defensebluhrm.info/api").replace("/api", "");
-                            window.open(`${baseUrl}${p.pdfUrl}?token=${localStorage.getItem('token')}`, "_blank");
+                            window.open(`${baseUrl}${p.pdfUrl}?token=${localStorage.getItem('fg_token')}`, "_blank");
                           }}
                             className="bg-blue-50 text-blue-600 border border-blue-100 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5">
                             <Download size={13} />

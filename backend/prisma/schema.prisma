@@ -15,14 +15,26 @@ model User {
   name      String
   smtpUser  String?
   smtpPass  String?
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+  resetTokens PasswordResetToken[]
 }
 
 enum Role {
+  SUPER_ADMIN
   ADMIN
   HR
   RECRUITER
   USER
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 enum CurrentStatus {

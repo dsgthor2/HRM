@@ -22,7 +22,7 @@ async function main() {
       name: "Admin User",
       email: "admin@defenseblu.com",
       password: await bcrypt.hash("DefenseBlu@2026", 10),
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
     },
   });
   console.log("✅ Admin:", admin.email, "| Password: DefenseBlu@2026");

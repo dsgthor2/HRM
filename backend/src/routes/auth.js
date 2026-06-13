@@ -255,6 +255,20 @@ router.post("/mark-attendance", auth, async (req, res) => {
           remarks: remarks !== undefined ? remarks : existing.remarks 
         }
       });
+
+      // Update current live status on check-in or check-out
+      if (checkOut) {
+        await prisma.employee.update({
+          where: { id: employee.id },
+          data: { currentStatus: "OFFLINE", lastStatusUpdate: new Date() }
+        });
+      } else if (checkIn || status === "PRESENT" || status === "WFH") {
+        await prisma.employee.update({
+          where: { id: employee.id },
+          data: { currentStatus: "ONLINE", lastStatusUpdate: new Date() }
+        });
+      }
+
       return res.json({ ...updated, alreadyMarked: true });
     }
 
@@ -269,6 +283,13 @@ router.post("/mark-attendance", auth, async (req, res) => {
         remarks
       }
     });
+
+    // Auto-set status to ONLINE on initial daily check-in
+    await prisma.employee.update({
+      where: { id: employee.id },
+      data: { currentStatus: "ONLINE", lastStatusUpdate: new Date() }
+    });
+
     res.json(rec);
   } catch (e) {
     res.status(400).json({ message: e.message });

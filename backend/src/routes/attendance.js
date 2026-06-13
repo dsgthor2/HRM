@@ -124,7 +124,7 @@ router.get("/live-status/stats", auth, async (req, res) => {
       _count: { id: true },
     });
     
-    const result = { ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0 };
+    const result = { ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0, LUNCH_BREAK: 0 };
     stats.forEach(s => {
       if (s.currentStatus) {
          result[s.currentStatus] = s._count.id;

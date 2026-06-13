@@ -8,7 +8,7 @@ import {
   Clock, Calendar, CheckCircle2, XCircle, AlertCircle,
   User, Edit2, LogOut, ChevronLeft, ChevronRight,
   Building2, Briefcase, Phone, Mail, Save, X, KeyRound,
-  Download, FileText, TrendingUp, DollarSign
+  Download, FileText, TrendingUp, DollarSign, Coffee, Utensils
 } from "lucide-react";
 import clsx from "clsx";
 import TimesheetManager from "@/components/user/TimesheetManager";
@@ -36,11 +36,32 @@ export default function UserDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
-
+  const [statusDuration, setStatusDuration] = useState("");
   const [tab, setTab] = useState<Tab>("attendance");
   const [employee, setEmployee] = useState<any>(null);
   const [todayRecord, setTodayRecord] = useState<any>(null);
   const [markingIn, setMarkingIn] = useState(false);
+
+  useEffect(() => {
+    if (!employee?.lastStatusUpdate) {
+      setStatusDuration("");
+      return;
+    }
+    const updateTimer = () => {
+      const elapsed = Date.now() - new Date(employee.lastStatusUpdate).getTime();
+      const hrs = Math.floor(elapsed / 3600000);
+      const mins = Math.floor((elapsed % 3600000) / 60000);
+      const secs = Math.floor((elapsed % 60000) / 1000);
+      const parts = [];
+      if (hrs > 0) parts.push(`${hrs}h`);
+      if (mins > 0 || hrs > 0) parts.push(`${mins}m`);
+      parts.push(`${secs}s`);
+      setStatusDuration(parts.join(" "));
+    };
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [employee?.lastStatusUpdate]);
   const [markingOut, setMarkingOut] = useState(false);
   const [attendanceRecords, setAttendanceRecords] = useState<any[]>([]);
   const [payslips, setPayslips] = useState<any[]>([]);
@@ -386,48 +407,111 @@ export default function UserDashboard() {
           </div>
         </div>
 
-        {/* Live Status Widget */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-sm text-slate-700 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              My Current Status
-            </h3>
-            {employee?.currentStatus && (
-              <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                Updated: {new Date(employee.lastStatusUpdate).toLocaleTimeString()}
-              </span>
-            )}
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { id: "ONLINE", label: "Online", icon: <CheckCircle2 size={16}/>, activeClass: "bg-emerald-50 border-emerald-200 text-emerald-700 ring-2 ring-emerald-500/20", iconBg: "bg-emerald-100" },
-              { id: "IN_MEETING", label: "In Meeting", icon: <MonitorSmartphone size={16}/>, activeClass: "bg-rose-50 border-rose-200 text-rose-700 ring-2 ring-rose-500/20", iconBg: "bg-rose-100" },
-              { id: "ON_BREAK", label: "On Break", icon: <Clock size={16}/>, activeClass: "bg-amber-50 border-amber-200 text-amber-700 ring-2 ring-amber-500/20", iconBg: "bg-amber-100" },
-              { id: "OFFLINE", label: "Offline", icon: <LogOut size={16}/>, activeClass: "bg-slate-100 border-slate-300 text-slate-800 ring-2 ring-slate-500/20", iconBg: "bg-slate-200" },
-            ].map(s => {
-              const isActive = employee?.currentStatus === s.id;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => updateLiveStatus(s.id)}
-                  disabled={!employee || isActive}
-                  className={clsx(
-                    "flex flex-col items-center justify-center p-3 rounded-xl border transition-all gap-2",
-                    isActive
-                      ? s.activeClass
-                      : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50"
-                  )}
-                >
-                  <div className={clsx("w-8 h-8 rounded-full flex items-center justify-center", isActive ? s.iconBg : "bg-slate-100")}>
-                    {s.icon}
+        {/* Live Status Widget - Zoho Cliq Style */}
+        {(() => {
+          const STATUS_DETAILS: Record<string, { label: string; text: string; bg: string; textClass: string; dot: string; desc: string }> = {
+            ONLINE: { label: "Engaged in Work", text: "Online", bg: "bg-emerald-50 border-emerald-200", textClass: "text-emerald-700", dot: "bg-emerald-500", desc: "You are active and engaged in work." },
+            LUNCH_BREAK: { label: "Lunch Break", text: "Lunch Break", bg: "bg-orange-50/70 border-orange-200", textClass: "text-orange-700", dot: "bg-orange-500", desc: "You are away for lunch." },
+            ON_BREAK: { label: "Short Break", text: "On Break", bg: "bg-amber-50 border-amber-200", textClass: "text-amber-700", dot: "bg-amber-500", desc: "You are on a quick break." },
+            IN_MEETING: { label: "In Meeting", text: "In Meeting", bg: "bg-rose-50 border-rose-200", textClass: "text-rose-700", dot: "bg-rose-500", desc: "You are in a meeting / busy." },
+            OFFLINE: { label: "Offline", text: "Offline", bg: "bg-slate-100 border-slate-300", textClass: "text-slate-800", dot: "bg-slate-500", desc: "You are currently checked out / offline." }
+          };
+          return (
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                <div>
+                  <h3 className="font-bold text-navy text-sm flex items-center gap-2">
+                    <span className={clsx(
+                      "w-2.5 h-2.5 rounded-full animate-pulse",
+                      employee?.currentStatus && STATUS_DETAILS[employee.currentStatus] 
+                        ? STATUS_DETAILS[employee.currentStatus].dot 
+                        : "bg-slate-400"
+                    )} />
+                    My Presence Status
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Zoho Cliq Status Panel</p>
+                </div>
+                {employee?.currentStatus && employee?.lastStatusUpdate && (
+                  <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
+                    Updated: {new Date(employee.lastStatusUpdate).toLocaleTimeString()}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-5">
+                {/* Current Status Preview Box */}
+                <div className={clsx(
+                  "flex-1 rounded-2xl border p-4 flex flex-col justify-between min-h-[100px] transition-colors",
+                  employee?.currentStatus && STATUS_DETAILS[employee.currentStatus]
+                    ? STATUS_DETAILS[employee.currentStatus].bg
+                    : "bg-slate-50 border-slate-200"
+                )}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className={clsx(
+                        "w-2.5 h-2.5 rounded-full",
+                        employee?.currentStatus && STATUS_DETAILS[employee.currentStatus]
+                          ? STATUS_DETAILS[employee.currentStatus].dot
+                          : "bg-slate-400"
+                      )} />
+                      <span className={clsx(
+                        "font-bold text-xs uppercase tracking-widest",
+                        employee?.currentStatus && STATUS_DETAILS[employee.currentStatus]
+                          ? STATUS_DETAILS[employee.currentStatus].textClass
+                          : "text-slate-500"
+                      )}>
+                        {employee?.currentStatus && STATUS_DETAILS[employee.currentStatus]
+                          ? STATUS_DETAILS[employee.currentStatus].label
+                          : "Offline"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-2 font-semibold">
+                      {employee?.currentStatus && STATUS_DETAILS[employee.currentStatus]
+                        ? STATUS_DETAILS[employee.currentStatus].desc
+                        : "Check in or set status to get started."}
+                    </p>
                   </div>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wide">{s.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+                  {statusDuration && (
+                    <div className="text-[10px] font-bold text-slate-400 mt-3 flex items-center gap-1.5 uppercase tracking-wider">
+                      <Clock size={11} /> Time elapsed: <span className="font-mono text-navy font-black text-xs lowercase">{statusDuration}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Status Options Selector */}
+                <div className="flex-1.5 grid grid-cols-2 sm:grid-cols-5 md:grid-cols-5 gap-2 w-full self-center">
+                  {[
+                    { id: "ONLINE", label: "Working", icon: <CheckCircle2 size={16}/>, activeClass: "bg-emerald-50 border-emerald-300 text-emerald-700 ring-2 ring-emerald-500/20", iconBg: "bg-emerald-100" },
+                    { id: "LUNCH_BREAK", label: "Lunch", icon: <Utensils size={16}/>, activeClass: "bg-orange-50 border-orange-300 text-orange-700 ring-2 ring-orange-500/20", iconBg: "bg-orange-100" },
+                    { id: "ON_BREAK", label: "Break", icon: <Coffee size={16}/>, activeClass: "bg-amber-50 border-amber-300 text-amber-700 ring-2 ring-amber-500/20", iconBg: "bg-amber-100" },
+                    { id: "IN_MEETING", label: "Meeting", icon: <MonitorSmartphone size={16}/>, activeClass: "bg-rose-50 border-rose-300 text-rose-700 ring-2 ring-rose-500/20", iconBg: "bg-rose-100" },
+                    { id: "OFFLINE", label: "Offline", icon: <LogOut size={16}/>, activeClass: "bg-slate-100 border-slate-300 text-slate-800 ring-2 ring-slate-500/20", iconBg: "bg-slate-200" },
+                  ].map(s => {
+                    const isActive = employee?.currentStatus === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => updateLiveStatus(s.id)}
+                        disabled={!employee || isActive}
+                        className={clsx(
+                          "flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all gap-1.5",
+                          isActive
+                            ? s.activeClass
+                            : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50"
+                        )}
+                      >
+                        <div className={clsx("w-8 h-8 rounded-full flex items-center justify-center transition-colors", isActive ? s.iconBg : "bg-slate-50 hover:bg-slate-100")}>
+                          {s.icon}
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-wider">{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Tab Nav */}
         <div className="flex bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm gap-1 overflow-x-auto no-scrollbar">

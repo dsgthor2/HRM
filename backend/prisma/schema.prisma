@@ -42,6 +42,7 @@ enum CurrentStatus {
   OFFLINE
   IN_MEETING
   ON_BREAK
+  LUNCH_BREAK
 }
 
 model Company {

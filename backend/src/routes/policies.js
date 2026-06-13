@@ -1,9 +1,9 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 // ── GET all policies (optionally filter by published/draft) ──────────────────
 // GET /policies            → all

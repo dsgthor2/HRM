@@ -1,11 +1,11 @@
 // ── ATTENDANCE ROUTE ──────────────────────────────────────────────────────────
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import { auth, isAdmin } from "../middleware/auth.js";
 import { generateAttendanceReportPDF } from "../utils/pdfGenerator.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 router.get("/", auth, async (req, res) => {
   const { date, employeeId, month, year } = req.query;

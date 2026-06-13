@@ -1,9 +1,9 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 const DEFAULT_TASKS = [
   "Submit Aadhaar card copy",

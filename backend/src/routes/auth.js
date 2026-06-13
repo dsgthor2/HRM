@@ -1,5 +1,5 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -7,7 +7,7 @@ import { auth, isAdmin } from "../middleware/auth.js";
 import { sendEmail } from "../utils/mailer.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 // ── Register (Admin only) ─────────────────────────
 router.post("/register", auth, isAdmin, async (req, res) => {
@@ -36,6 +36,9 @@ router.post("/register", auth, isAdmin, async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password)))
       return res.status(401).json({ message: "Invalid credentials" });

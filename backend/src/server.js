@@ -62,6 +62,11 @@ import expensesRouter from "./routes/expenses.js";
 import performanceRouter from "./routes/performance.js";
 
 import superadminRouter from "./routes/superadmin.js";
+import doctorRouter from "./routes/doctor.js";
+import { doctor } from "./utils/doctor.js";
+
+// Start the App Doctor self-healing daemon
+doctor.start();
 
 app.use("/api/auth", authRouter);
 app.use("/api/superadmin", superadminRouter);
@@ -81,26 +86,90 @@ app.use("/api/timesheets", timesheetsRouter);
 app.use("/api/assets", assetsRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/performance", performanceRouter);
+app.use("/api/doctor", doctorRouter);
 
 app.get("/api/health", (req, res) =>
   res.json({ status: "ok", app: "DefenseBlu HRMS", time: new Date() })
 );
 
+import { ApiError } from "./utils/ApiError.js";
+import { Prisma } from "@prisma/client";
+import { prisma } from "./lib/prisma.js";
+
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: err.message || "Internal server error" });
+  console.error("🔥 Error:", err.stack || err);
+
+  if (err instanceof ApiError) {
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+      errors: err.errors
+    });
+  }
+
+  // Handle Prisma Errors
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === "P2002") {
+      return res.status(409).json({ success: false, message: "A record with that value already exists." });
+    }
+    if (err.code === "P2025") {
+      return res.status(404).json({ success: false, message: "Record not found." });
+    }
+    return res.status(400).json({ success: false, message: "Database operation failed." });
+  }
+
+  res.status(err.status || 500).json({ 
+    success: false, 
+    message: err.message || "Internal server error" 
+  });
 });
 
 const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(`\n🚀 DefenseBlu HRMS running on http://localhost:${PORT}\n`);
+let server;
+if (process.env.NODE_ENV !== 'test') {
+  server = app.listen(PORT, () => {
+    console.log(`\n🚀 DefenseBlu HRMS running on http://localhost:${PORT}\n`);
+  });
+
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`\n❌  Port ${PORT} is already in use.\n   Close the other process and save any file to trigger nodemon restart.\n`);
+      process.exit(1);
+    } else {
+      throw err;
+    }
+  });
+}
+
+// Prevent crash on unhandled errors
+process.on("uncaughtException", (err) => {
+  console.error("🔥 Uncaught Exception:", err);
+  if (doctor.healthStatus) doctor.healthStatus.issues.push({ type: "UNCAUGHT_EXCEPTION", error: err.message });
 });
 
-server.on("error", (err) => {
-  if (err.code === "EADDRINUSE") {
-    console.error(`\n❌  Port ${PORT} is already in use.\n   Close the other process and save any file to trigger nodemon restart.\n`);
-    process.exit(1);
-  } else {
-    throw err;
-  }
+process.on("unhandledRejection", (err) => {
+  console.error("🔥 Unhandled Rejection:", err);
+  if (doctor.healthStatus) doctor.healthStatus.issues.push({ type: "UNHANDLED_REJECTION", error: err?.message || err });
 });
+
+// Graceful Shutdown
+const shutdown = async (signal) => {
+  console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
+  doctor.stop();
+  if (server) {
+    server.close(async () => {
+      console.log("HTTP server closed.");
+      await prisma.$disconnect();
+      console.log("Database pool disconnected.");
+      process.exit(0);
+    });
+  } else {
+    await prisma.$disconnect();
+    process.exit(0);
+  }
+};
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
+
+export default app;

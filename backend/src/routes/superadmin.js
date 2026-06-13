@@ -1,10 +1,10 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import bcrypt from "bcryptjs";
 import { auth, isSuperAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 // Only SUPER_ADMIN can access these routes
 router.use(auth);

@@ -1,11 +1,11 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import { auth, isAdmin } from "../middleware/auth.js";
 import multer from "multer";
 import path from "path";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 // ── Logo Upload ──────────────────────────────────────────────────
 const storage = multer.diskStorage({

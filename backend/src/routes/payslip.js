@@ -1,10 +1,10 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
 import auth from "../middleware/auth.js";
 import { generatePayslipPDF } from "../utils/pdfGenerator.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
 
 // ── GET my own payslips (for employees) ──────────────────────────────────────
 router.get("/my", auth, async (req, res) => {

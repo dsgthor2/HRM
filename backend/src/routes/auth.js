@@ -48,13 +48,28 @@ router.post("/login", async (req, res) => {
     if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
       const existingEmp = await prisma.employee.findFirst({ where: { email: user.email } });
       if (!existingEmp) {
+        const deptName = "Management";
+        const desigTitle = user.role === "SUPER_ADMIN" ? "Super Admin" : "Administrator";
+
+        await prisma.department.upsert({
+          where: { name: deptName },
+          update: {},
+          create: { name: deptName }
+        });
+
+        await prisma.designation.upsert({
+          where: { title: desigTitle },
+          update: {},
+          create: { title: desigTitle }
+        });
+
         await prisma.employee.create({
           data: {
             employeeId: `ADM-${Date.now()}`,
             name: user.name,
             email: user.email,
-            department: "Management",
-            designation: user.role === "SUPER_ADMIN" ? "Super Admin" : "Administrator",
+            department: deptName,
+            designation: desigTitle,
             status: "ACTIVE",
             joinDate: new Date()
           }

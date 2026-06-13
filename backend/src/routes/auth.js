@@ -50,6 +50,7 @@ router.post("/login", async (req, res) => {
       if (!existingEmp) {
         await prisma.employee.create({
           data: {
+            employeeId: `ADM-${Date.now()}`,
             name: user.name,
             email: user.email,
             department: "Management",

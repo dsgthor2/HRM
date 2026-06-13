@@ -81,6 +81,7 @@ const NAV: NavItem[] = [
       { label: "Onboarding", href: "/recruitment/onboarding" },
     ],
   },
+  { label: "My Portal", href: "/user/dashboard", icon: Home },
 ];
 
 function isNestedGroup(item: NavChild | NavNestedGroup): item is NavNestedGroup {

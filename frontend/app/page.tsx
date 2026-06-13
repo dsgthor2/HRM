@@ -228,8 +228,8 @@ function Footer() {
           © 2026 DefenseBlu Private Limited. All rights reserved.
         </p>
         <div className="flex gap-6 text-[10px] font-black text-navy uppercase tracking-widest">
-           <Link href="#" className="hover:text-blue-600">Privacy</Link>
-           <Link href="#" className="hover:text-blue-600">Terms</Link>
+           <Link href="/privacy" className="hover:text-blue-600">Privacy</Link>
+           <Link href="/terms" className="hover:text-blue-600">Terms</Link>
            <Link href="/login" className="hover:text-blue-600">Portal</Link>
         </div>
       </div>

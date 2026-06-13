@@ -43,6 +43,24 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+router.put("/live-status", auth, async (req, res) => {
+  try {
+    const { status, employeeId } = req.body;
+    if (!status || !employeeId) return res.status(400).json({ message: "Status and employeeId required" });
+    
+    const updated = await prisma.employee.update({
+      where: { id: employeeId },
+      data: { 
+        currentStatus: status,
+        lastStatusUpdate: new Date()
+      }
+    });
+    res.json({ currentStatus: updated.currentStatus, lastStatusUpdate: updated.lastStatusUpdate });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
 router.put("/:id", auth, async (req, res) => {
   const rec = await prisma.attendance.update({ where: { id: req.params.id }, data: req.body });
   res.json(rec);
@@ -136,23 +154,6 @@ router.get("/live-status/stats", auth, async (req, res) => {
   }
 });
 
-router.put("/live-status", auth, async (req, res) => {
-  try {
-    const { status, employeeId } = req.body;
-    if (!status || !employeeId) return res.status(400).json({ message: "Status and employeeId required" });
-    
-    const updated = await prisma.employee.update({
-      where: { id: employeeId },
-      data: { 
-        currentStatus: status,
-        lastStatusUpdate: new Date()
-      }
-    });
-    res.json({ currentStatus: updated.currentStatus, lastStatusUpdate: updated.lastStatusUpdate });
-  } catch (e) {
-    res.status(500).json({ message: e.message });
-  }
-});
 
 router.get("/live-status/:employeeId", auth, async (req, res) => {
   try {

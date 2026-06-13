@@ -17,9 +17,11 @@ import clsx from "clsx";
 
 function Logo({ className = "w-10 h-10" }: { className?: string }) {
   return (
-    <div className={clsx("bg-navy rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-900/20", className)}>
-      F
-    </div>
+    <img 
+      src="/icons/icon-192x192.png" 
+      alt="DefenseBlu Logo" 
+      className={clsx("object-contain rounded-xl shadow-md", className)} 
+    />
   );
 }
 

@@ -120,9 +120,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 opacity-5"
           style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "28px 28px" }} />
         <div className="relative z-10 text-center">
-          <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
-            <span className="text-white text-4xl font-black">F</span>
-          </div>
+          <img src="/icons/icon-512x512.png" alt="DefenseBlu Logo" className="w-20 h-20 object-contain rounded-3xl mx-auto mb-6 border border-white/20 shadow-lg" />
           <h1 className="text-white text-3xl font-black mb-2 tracking-tight">DefenseBlu HRMS</h1>
           <p className="text-white/50 text-sm">Consulting Services Pvt Ltd</p>
           <div className="mt-12 space-y-4 text-left">
@@ -155,9 +153,7 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-sm slide-in">
           <div className="mb-8 lg:hidden text-center">
-            <div className="w-14 h-14 bg-navy rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white text-2xl font-black">F</span>
-            </div>
+            <img src="/icons/icon-192x192.png" alt="DefenseBlu Logo" className="w-14 h-14 object-contain rounded-2xl mx-auto mb-4 shadow-md" />
             <h1 className="text-xl font-black text-navy">DefenseBlu HRMS</h1>
           </div>
 

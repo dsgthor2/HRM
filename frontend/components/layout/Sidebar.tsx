@@ -209,11 +209,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-navy flex items-center justify-center shadow-md shadow-navy/20 hover:rotate-3 transition-transform">
-                <span className="text-white text-lg font-black tracking-tight">
-                  {companyName.charAt(0).toUpperCase() || "F"}
-                </span>
-              </div>
+              <img src="/icons/icon-192x192.png" alt="DefenseBlu Logo" className="w-10 h-10 object-contain rounded-xl shadow-md" />
               <div className="min-w-0">
                 <div className="text-base font-black text-navy leading-tight tracking-tight truncate">
                   {companyName.split(" ")[0] || "DefenseBlu"}

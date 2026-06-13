@@ -318,9 +318,7 @@ export default function UserDashboard() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 rounded-xl bg-navy flex items-center justify-center">
-              <span className="text-white text-lg font-black">F</span>
-            </div>
+            <img src="/icons/icon-192x192.png" alt="DefenseBlu Logo" className="w-10 h-10 object-contain rounded-xl shadow-md" />
             <div>
               <div className="font-black text-navy text-sm leading-tight">DefenseBlu HRMS</div>
               <div className="text-[10px] text-slate-400 uppercase tracking-widest">Employee Portal</div>

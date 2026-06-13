@@ -30,7 +30,7 @@ export default function Dashboard() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [hiringId, setHiringId] = useState<string | null>(null);
-  const [liveStatus, setLiveStatus] = useState({ ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0 });
+  const [liveStatus, setLiveStatus] = useState({ ONLINE: 0, OFFLINE: 0, IN_MEETING: 0, ON_BREAK: 0, LUNCH_BREAK: 0 });
 
   // Load data function to refresh list
   const loadData = async () => {
@@ -228,6 +228,10 @@ export default function Dashboard() {
               <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.ON_BREAK || 0} Break</span>
             </div>
             <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{(liveStatus as any).LUNCH_BREAK || 0} Lunch</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 border-l border-slate-100">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
               <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">{liveStatus.OFFLINE || 0} Offline</span>
             </div>
@@ -360,7 +364,8 @@ export default function Dashboard() {
                               "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white",
                               item.liveStatus === "ONLINE" ? "bg-emerald-500" :
                               item.liveStatus === "IN_MEETING" ? "bg-rose-500" :
-                              item.liveStatus === "ON_BREAK" ? "bg-amber-500" : "bg-slate-300"
+                              item.liveStatus === "ON_BREAK" ? "bg-amber-500" :
+                              item.liveStatus === "LUNCH_BREAK" ? "bg-orange-500" : "bg-slate-300"
                             )} />
                           )}
                         </div>

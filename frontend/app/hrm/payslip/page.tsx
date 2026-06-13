@@ -544,93 +544,95 @@ export default function PayslipPage() {
           </div>
         )}
 
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-cream-dark bg-slate-50/60">
-              <th className="th w-10"><input type="checkbox" className="rounded" checked={selected.size === payslips.length && payslips.length > 0} onChange={toggleAll} /></th>
-              <th className="th">Employee</th>
-              <th className="th">Designation</th>
-              <th className="th">Department</th>
-              <th className="th">Last Updated</th>
-              <th className="th">Status</th>
-              <th className="th">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payslips.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="td text-center py-16">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center"><FileText size={24} className="text-slate-300" /></div>
-                    <div>
-                      <div className="font-semibold text-slate-500 text-sm">No payslips for {filterMonth} {filterYear}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">
-                        <button onClick={() => setShowGen(true)} className="text-accent hover:underline">Generate now →</button>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-cream-dark bg-slate-50/60">
+                <th className="th w-10"><input type="checkbox" className="rounded" checked={selected.size === payslips.length && payslips.length > 0} onChange={toggleAll} /></th>
+                <th className="th">Employee</th>
+                <th className="th">Designation</th>
+                <th className="th">Department</th>
+                <th className="th">Last Updated</th>
+                <th className="th">Status</th>
+                <th className="th">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {payslips.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="td text-center py-16">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center"><FileText size={24} className="text-slate-300" /></div>
+                      <div>
+                        <div className="font-semibold text-slate-500 text-sm">No payslips for {filterMonth} {filterYear}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">
+                          <button onClick={() => setShowGen(true)} className="text-accent hover:underline">Generate now →</button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            ) : payslips.map((p, i) => (
-              <tr key={p.id} className="tr group" style={{ animation: `slideInRow 0.3s ease ${i * 50}ms both` }}>
-                <td className="td"><input type="checkbox" className="rounded" checked={selected.has(p.id)} onChange={() => toggleSelect(p.id)} /></td>
-
-                <td className="td">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-navy to-accent flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                      {p.employee?.name?.[0] || "?"}
+                  </td>
+                </tr>
+              ) : payslips.map((p, i) => (
+                <tr key={p.id} className="tr group" style={{ animation: `slideInRow 0.3s ease ${i * 50}ms both` }}>
+                  <td className="td"><input type="checkbox" className="rounded" checked={selected.has(p.id)} onChange={() => toggleSelect(p.id)} /></td>
+  
+                  <td className="td">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-navy to-accent flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                        {p.employee?.name?.[0] || "?"}
+                      </div>
+                      <Link href={`/hrm/employees?id=${p.employee?.id}`} className="group/link">
+                        <div className="font-semibold text-navy text-sm group-hover/link:text-accent transition-colors">{p.employee?.name}</div>
+                        <div className="text-xs text-slate-400">{p.employee?.employeeId}</div>
+                      </Link>
                     </div>
-                    <Link href={`/hrm/employees?id=${p.employee?.id}`} className="group/link">
-                      <div className="font-semibold text-navy text-sm group-hover/link:text-accent transition-colors">{p.employee?.name}</div>
-                      <div className="text-xs text-slate-400">{p.employee?.employeeId}</div>
-                    </Link>
-                  </div>
-                </td>
-                <td className="td text-sm text-slate-600">{p.employee?.designation}</td>
-                <td className="td text-sm text-slate-600">{p.employee?.department}</td>
-                <td className="td text-xs text-slate-400">
-                  {(() => {
-                    const d = new Date(p.generated);
-                    const dd = String(d.getUTCDate()).padStart(2, "0");
-                    const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-                    const yy = d.getUTCFullYear();
-                    return `${dd}-${mm}-${yy}`;
-                  })()}
-                </td>
-                <td className="td"><StatusBadge status={p.pdfUrl ? "GENERATED" : "READY"} /></td>
-
-                <td className="td">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <button className="btn-sm bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100 gap-1" onClick={() => setEditSlip({ ...p })}>
-                      <Edit3 size={12} /> Edit
-                    </button>
-
-                    {p.pdfUrl ? (
-                      <>
-                        <button className="btn-sm bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 gap-1" onClick={() => setPreviewSlip(p)}>
-                          <Eye size={12} /> Preview
-                        </button>
-                        <a href={`https://hrm-6kly.onrender.com${p.pdfUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
-                          className="btn-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 gap-1">
-                          <Download size={12} /> PDF
-                        </a>
-
-                      </>
-                    ) : (
-                      <button className="btn-sm bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 gap-1" onClick={() => handleGeneratePDF(p.id)}>
-                        <Sparkles size={12} /> Generate
+                  </td>
+                  <td className="td text-sm text-slate-600">{p.employee?.designation}</td>
+                  <td className="td text-sm text-slate-600">{p.employee?.department}</td>
+                  <td className="td text-xs text-slate-400">
+                    {(() => {
+                      const d = new Date(p.generated);
+                      const dd = String(d.getUTCDate()).padStart(2, "0");
+                      const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+                      const yy = d.getUTCFullYear();
+                      return `${dd}-${mm}-${yy}`;
+                    })()}
+                  </td>
+                  <td className="td"><StatusBadge status={p.pdfUrl ? "GENERATED" : "READY"} /></td>
+  
+                  <td className="td">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button className="btn-sm bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100 gap-1" onClick={() => setEditSlip({ ...p })}>
+                        <Edit3 size={12} /> Edit
                       </button>
-                    )}
-
-                    <button className="btn-icon btn-sm text-red-400 hover:text-red-600 hover:bg-red-50" onClick={() => handleDelete(p.id)}>
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  
+                      {p.pdfUrl ? (
+                        <>
+                          <button className="btn-sm bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 gap-1" onClick={() => setPreviewSlip(p)}>
+                            <Eye size={12} /> Preview
+                          </button>
+                          <a href={`https://hrm-6kly.onrender.com${p.pdfUrl}?token=${localStorage.getItem('fg_token')}`} target="_blank" rel="noreferrer"
+                            className="btn-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 gap-1">
+                            <Download size={12} /> PDF
+                          </a>
+  
+                        </>
+                      ) : (
+                        <button className="btn-sm bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 gap-1" onClick={() => handleGeneratePDF(p.id)}>
+                          <Sparkles size={12} /> Generate
+                        </button>
+                      )}
+  
+                      <button className="btn-icon btn-sm text-red-400 hover:text-red-600 hover:bg-red-50" onClick={() => handleDelete(p.id)}>
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {payslips.length > 0 && (
           <div className="px-5 py-3 border-t border-cream-dark bg-slate-50/40 flex items-center justify-between">

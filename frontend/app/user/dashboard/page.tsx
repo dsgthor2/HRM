@@ -306,6 +306,15 @@ export default function UserDashboard() {
             </div>
           </Link>
           <div className="flex items-center gap-3">
+            {mounted && (user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
+              <button 
+                onClick={() => router.push("/dashboard")}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-lg text-xs font-bold transition-colors mr-2"
+                title="Return to Admin Dashboard"
+              >
+                Admin Dashboard
+              </button>
+            )}
             <div className="text-right hidden sm:block">
               <div className="font-bold text-slate-800 text-sm" suppressHydrationWarning>
                 {mounted ? user?.name : ""}

@@ -1,6 +1,7 @@
 import express from "express";
 import { prisma } from "../lib/prisma.js";
 import { auth } from "../middleware/auth.js";
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 router.use(auth);
@@ -241,6 +242,23 @@ router.post("/", async (req, res) => {
         designationRel: designation ? { connect: { title: designation } } : undefined
       },
     });
+
+    // Auto-create corresponding User account
+    const existingUser = await prisma.user.findUnique({ where: { email: otherData.email } });
+    if (!existingUser) {
+      const tempPassword = "Welcome@" + Math.random().toString(36).substring(2, 10);
+      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+      await prisma.user.create({
+        data: {
+          email: otherData.email,
+          name: otherData.name,
+          password: hashedPassword,
+          role: "USER",
+          isActive: true
+        }
+      });
+    }
+
     res.status(201).json(employee);
   } catch (err) {
     console.error("POST /employees error:", err);
@@ -293,6 +311,20 @@ router.put("/:id", async (req, res) => {
       },
     });
 
+    // Sync corresponding User account if exists
+    if (oldEmployee) {
+      const linkedUser = await prisma.user.findUnique({ where: { email: oldEmployee.email } });
+      if (linkedUser) {
+        await prisma.user.update({
+          where: { id: linkedUser.id },
+          data: {
+            email: otherData.email ?? oldEmployee.email,
+            name: otherData.name ?? oldEmployee.name
+          }
+        });
+      }
+    }
+
     if (oldEmployee && otherData.salary !== undefined && Number(otherData.salary) !== Number(oldEmployee.salary)) {
       await prisma.salaryHistory.create({
         data: {
@@ -325,6 +357,14 @@ router.put("/:id", async (req, res) => {
 // ── DELETE /employees/:id ─────────────────────────────────────────
 router.delete("/:id", async (req, res) => {
   try {
+    const employee = await prisma.employee.findUnique({ where: { id: req.params.id } });
+    if (employee) {
+      // Find and delete corresponding User account if exists
+      const user = await prisma.user.findUnique({ where: { email: employee.email } });
+      if (user && user.id !== req.user.id) {
+        await prisma.user.delete({ where: { id: user.id } });
+      }
+    }
     await prisma.employee.delete({ where: { id: req.params.id } });
     res.json({ success: true });
   } catch (err) {

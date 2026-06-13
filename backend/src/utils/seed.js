@@ -45,7 +45,7 @@ async function main() {
     create: {
       id: "default-company",
       name: "DefenseBlu\nPrivate Limited",
-      address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
+      address: "Global Operations",
       email: "hr@defenseblu.com",
       phone: "+91 00000 00000",
       logoUrl: "/uploads/logo.png",

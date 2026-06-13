@@ -15,27 +15,27 @@ async function cleanup() {
       data: {
         id: "default-company",
         name: "DefenseBlu\nPrivate Limited",
-        address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
+        address: "Global Operations",
         email: "hr@defenseblu.com",
         phone: "+91 00000 00000",
       }
     });
-    console.log("Cleanup complete. Only Tirupati address remains.");
+    console.log("Cleanup complete. Only Global Operations address remains.");
   } else if (companies.length === 1) {
-    console.log("Updating existing company to Tirupati...");
+    console.log("Updating existing company to Global Operations...");
     await prisma.company.updateMany({
       data: {
         name: "DefenseBlu\nPrivate Limited",
-        address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
+        address: "Global Operations",
       }
     });
   } else {
-    console.log("No company found. Creating Tirupati record...");
+    console.log("No company found. Creating Global Operations record...");
     await prisma.company.create({
       data: {
         id: "default-company",
         name: "DefenseBlu\nPrivate Limited",
-        address: "2nd floor, Sri ram nagar, 21-1-45/4, Akkarampalle, Tirupati, Andhra pradesh - 517507",
+        address: "Global Operations",
         email: "hr@defenseblu.com",
         phone: "+91 00000 00000",
       }

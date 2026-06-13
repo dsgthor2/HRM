@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 async function main() {
   const usersToCreate = [
     {
-      email: "harish.m@defenseblu.com",
-      name: "Harish M",
+      email: "gupthaa@defenseblu.com",
+      name: "Gupthaa",
       password: "Password@123",
       role: "ADMIN"
     },

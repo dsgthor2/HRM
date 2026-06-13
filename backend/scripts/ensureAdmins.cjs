@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function ensureAdmins() {
   const admins = [
-    { name: 'Harish M', email: 'harish.m@defenseblu.com', password: 'Password@123' },
+    { name: 'Gupthaa', email: 'gupthaa@defenseblu.com', password: 'Password@123' },
     { name: 'Lokesh V', email: 'hr@defenseblu.com', password: 'Password@123' },
     { name: 'Admin', email: 'admin@defenseblu.com', password: 'DefenseBlu@2026' },
   ];

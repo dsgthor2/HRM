@@ -17,6 +17,9 @@ module.exports = {
         gold: "#eab308",
         "gold-light": "#fef9c3",
       },
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+      },
     },
   },
   plugins: [],

@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 const admins = [
-  { email: "harish.m@defenseblu.com", name: "Harish M" },
+  { email: "gupthaa@defenseblu.com", name: "Gupthaa" },
   { email: "hr@defenseblu.com", name: "Lokesh Vasu" },
   { email: "admin@defenseblu.com", name: "Admin" },
   { email: "dheelepsai.n@defenseblu.com", name: "Dheelepsai N" },

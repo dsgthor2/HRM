@@ -93,10 +93,12 @@ function Hero() {
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <h1 className="text-4xl lg:text-6xl font-black text-navy leading-tight">
-            Comprehensive <span className="text-blue-600">Business Solutions</span> for Your Growth.
+            Comprehensive <br className="hidden sm:block" />
+            <span className="text-blue-600">Business Solutions</span> <br />
+            for Your Growth.
           </h1>
           <p className="text-lg text-slate-500 leading-relaxed max-w-lg">
-            DefenseBlu provides specialized staffing, accounting, and payroll management solutions. Our advanced HRMS platfrom streamlines your entire employee lifecycle with precision.
+            DefenseBlu provides specialized staffing, accounting, and payroll management solutions. Our advanced HRMS platform streamlines your entire employee lifecycle with precision.
           </p>
           <div className="flex items-center gap-6 pt-4">
              <div className="flex items-center gap-2">
@@ -135,7 +137,7 @@ function About() {
             <h2 className="text-4xl font-black text-navy uppercase tracking-tight">Overview</h2>
             <div className="h-1.5 w-20 bg-blue-600 rounded-full mx-auto" />
             <p className="text-slate-500 text-lg leading-relaxed text-center">
-              DefenseBlu Private Limited is a professionally managed Information Technology and Human Resource solutions firm dedicated to delivering excellence across every dimension of its service offerings. As an accredited Microsoft Certified Partner, the company is committed to providing comprehensive, end-to-end technology solutions — encompassing Cloud Enablement, Enterprise Resource Planning (ERP) Implementation, Custom Software Development, IT Staff Augmentation, and Business Intelligence services — empowering organisations across diverse sectors to achieve seamless digital transformation. Underpinned by a mission to bridge the gap between innovative technology and skilled human capital, DefenseBlu is equally dedicated to creating meaningful employment pathways by connecting qualified professionals with opportunities that align with their aspirations and expertise. The company's vision is to emerge as the foremost trusted IT consulting and talent solutions partner in South India — an organisation distinguished by its unwavering commitment to excellence, ethical conduct, and client-centric value delivery. At DefenseBlu, every engagement is governed by four enduring principles: integrity, excellence, innovation, and a people-first philosophy — values that shape not only the solutions delivered but also the relationships built. With a proven track record of serving clients across IT & ITES, manufacturing, healthcare, education, and government verticals, DefenseBlu stands as a strategic partner of choice for organisations seeking sustainable growth and for professionals pursuing purposeful careers. At DefenseBlu, your growth is not just our goal — it is our commitment.
+              DefenseBlu Private Limited is an innovative technology and research firm dedicated to engineering advanced solutions across Security, Artificial Intelligence, and highly functional utility applications. Driven by a deep commitment to technological advancement, DefenseBlu actively conducts and publishes original research, contributing extensively to the broader academic and engineering communities through published papers and books. By bridging the gap between cutting-edge AI research and robust security implementations, we deliver enterprise-grade solutions that empower organizations to operate securely and efficiently. At DefenseBlu, our mission is not just to build the next generation of digital infrastructure, but to pioneer the research that makes it possible.
             </p>
           </div>
           
@@ -147,9 +149,8 @@ function About() {
               <div>
                 <div className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Our Office</div>
                 <span className="text-md font-bold text-slate-700 leading-relaxed block">
-                  2nd floor, Sri ram nagar, 21-1-45/4,<br/>
-                  Akkarampalle, Tirupati,<br/>
-                  Andhra pradesh - 517507
+                  Global Operations<br/>
+                  (Remote / Distributed)
                 </span>
               </div>
             </div>
@@ -162,7 +163,7 @@ function About() {
                 <div className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Connect with Us</div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-md font-bold text-slate-700">contact@defenseblu.com</span>
-                  <span className="text-md font-bold text-slate-700">harish.m@defenseblu.com</span>
+                  <span className="text-md font-bold text-slate-700">gupthaa@defenseblu.com</span>
                 </div>
               </div>
             </div>

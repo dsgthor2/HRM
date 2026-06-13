@@ -191,14 +191,14 @@ function Services() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            "Cloud Enablement Services",
-            "ERP Implementation & Maintenance",
-            "IT Staff Augmentation Services",
-            "Technology Infrastructure Services",
-            "Custom Software Development",
-            "Consulting and Tuning Services",
-            "Software Testing and Automation",
-            "Software/Hardware License Resellers"
+            "End-to-End Enterprise Solutions",
+            "Cybersecurity & Threat Mitigation",
+            "AI Research & Engineering",
+            "Custom Client-Requested Builds",
+            "Academic Publishing & Tech Books",
+            "Utility Application Development",
+            "Website Maintenance & SRE",
+            "Active Technology Research Wings"
           ].map((s, i) => (
             <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 flex items-start gap-4 hover:shadow-lg transition-all group">
               <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
